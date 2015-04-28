@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">黑广播</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">设置</string>
+    <string name="action_monitor">监测</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
+    <string name="company">成都零点科技有限公司</string>
+    <string name="set_database">数据库</string>
+    <string name="set_device">设备</string>
+    <string name="set_about">关于</string>
+
+
+</resources>

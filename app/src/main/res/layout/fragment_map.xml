@@ -1,0 +1,37 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ldkj.com.ldkjenv.fragments.MapFragment">
+
+    <com.amap.api.maps.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/map_icon_compass"
+            android:src="@mipmap/ic_compass"
+            style="@style/map_icon_style_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageButton android:id="@+id/map_icon_delete"
+            android:src="@mipmap/ic_delete"
+            style="@style/map_icon_style_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <CheckBox
+            android:id="@+id/map_icon_maker"
+            android:button="@mipmap/ic_maker"
+            style="@style/map_icon_style_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</RelativeLayout>

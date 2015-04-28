@@ -1,0 +1,45 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
+        <!-- Customize your theme here. -->
+    </style>
+
+
+    <style name="style_table">
+        <item name="android:layout_marginBottom">1dp</item>
+        <item name="android:background">@drawable/background_shape</item>
+    </style>
+
+    <style name="style_table_title">
+        <item name="android:gravity">right</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+    <style name="style_table_et_value">
+        <item name="android:layout_weight">1</item>
+        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingBottom">3dp</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">#FFA35D1B</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:background">@drawable/onclick_selector</item>
+    </style>
+    <style name="style_table_tv_value" parent="style_table_et_value">
+        <item name="android:checkable">true</item>
+    </style>
+
+    <style name="style_imagebutton">
+        <item name="android:layout_marginBottom">1dp</item>
+        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingBottom">3dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#FFA35D1B</item>
+        <item name="android:background">@drawable/checkbox_selector</item>
+    </style>
+
+
+
+</resources>

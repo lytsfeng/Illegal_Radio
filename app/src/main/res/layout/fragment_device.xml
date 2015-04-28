@@ -1,0 +1,65 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ldkj.illegal_radio.fragments.DBFragment">
+
+    <TableRow style="@style/style_table"
+        >
+        <TextView
+            style="@style/style_table_title"
+            android:text="地址"/>
+        <EditText
+            android:id="@+id/et_device_address"
+            style="@style/style_table_et_value"
+            android:text="127.0.0.1"/>
+    </TableRow>
+    <TableRow style="@style/style_table">
+        <TextView
+            style="@style/style_table_title"
+            android:text="TCP端口"/>
+        <EditText
+            android:id="@+id/et_device_tcp_port"
+            style="@style/style_table_et_value"
+            android:text="65004"/>
+    </TableRow>
+
+    <TableRow style="@style/style_table">
+        <TextView
+            style="@style/style_table_title"
+            android:text="UDP端口"/>
+        <EditText
+            android:id="@+id/et_device_udp_port"
+            style="@style/style_table_et_value"
+            android:text="65004"/>
+    </TableRow>
+    <TableRow style="@style/style_table">
+        <TextView
+            style="@style/style_table_title"
+            android:text="设备类型"/>
+        <TextView
+            android:id="@+id/tv_device_type"
+            style="@style/style_table_tv_value"
+            android:text="LD100"/>
+    </TableRow>
+    <LinearLayout android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+        <ImageButton
+            android:id="@+id/ibtn_device_ok"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@mipmap/ic_launcher"
+            android:background="@drawable/imagebutton_selector"/>
+        <ImageButton
+            android:id="@+id/ibtn_device_cannel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@mipmap/ic_launcher"
+            android:background="@drawable/imagebutton_selector"/>
+    </LinearLayout>
+
+</TableLayout>
+

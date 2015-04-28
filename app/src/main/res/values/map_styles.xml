@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="map_icon_style_button">
+        <item name="android:layout_width">@dimen/btn_square_size</item>
+        <item name="android:layout_height">@dimen/btn_square_size</item>
+        <item name="android:layout_marginRight">@dimen/marginright</item>
+        <item name="android:background">@drawable/imagebutton_selector</item>
+    </style>
+    <style name="map_icon_style_checkbox" parent="map_icon_style_button">
+        <item name="android:background">@drawable/icon_checkbox_selector</item>
+    </style>
+</resources>
