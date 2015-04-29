@@ -77,6 +77,7 @@ public class MapFragment extends Fragment implements AMap.OnMarkerClickListener 
         aMap.getUiSettings().setLogoPosition(
                 AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);
         aMap.moveCamera(CameraUpdateFactory.zoomTo(18));
+        aMap.getUiSettings().setZoomControlsEnabled(false);
 
         latLng = getLastLatlon();
 

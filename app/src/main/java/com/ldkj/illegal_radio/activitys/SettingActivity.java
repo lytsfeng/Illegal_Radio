@@ -1,6 +1,7 @@
 package com.ldkj.illegal_radio.activitys;
 
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.RadioGroup;
 
@@ -15,6 +16,8 @@ import java.util.Map;
 
 public class SettingActivity extends ActivityFrame {
 
+
+
     private static Map<Integer,Fragment> fragmentMap = new HashMap<Integer,Fragment>(){
         {
             put(R.id.set_db,new DBFragment());
@@ -22,7 +25,7 @@ public class SettingActivity extends ActivityFrame {
             put(R.id.set_about,new AboutFragment());
         }
     };
-
+    private SharedPreferences preferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

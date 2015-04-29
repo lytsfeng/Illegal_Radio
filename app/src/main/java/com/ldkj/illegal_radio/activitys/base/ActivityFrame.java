@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 import com.ldkj.illegal_radio.R;
 import com.ldkj.illegal_radio.activitys.MainActivity;
@@ -18,8 +19,12 @@ import com.ldkj.illegal_radio.activitys.SettingActivity;
 public class ActivityFrame extends ActivityBase {
 
 
-
-
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

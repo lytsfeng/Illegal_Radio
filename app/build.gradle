@@ -18,9 +18,16 @@ android {
         }
     }
 }
-
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.1.0'
     compile 'com.android.support:support-v4:22.1.0'
+    dependencies {
+        compile(name:'libbutton', ext:'aar')
+    }
 }

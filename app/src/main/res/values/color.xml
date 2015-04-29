@@ -4,4 +4,7 @@
     <color name="white">#ffffffff</color>
     <color name="btn_background_over">#660199ba</color>
     <color name="shape_background_over">#4e000000</color>
+    <color name="white_pressed">#f1f1f1</color>
+    <color name="half_black">#808080</color>
+    <color name="black_semi_transparent">#B2000000</color>
 </resources>
