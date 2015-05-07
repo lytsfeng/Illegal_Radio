@@ -16,4 +16,12 @@
 
     <dimen name="corners">5dp</dimen>
     <dimen name="framewidth">1dp</dimen>
+
+
+    <dimen name="view_top_margin">16dp</dimen>
+    <dimen name="view_left_margin">16dp</dimen>
+    <dimen name="view_bottom_margin">16dp</dimen>
+    <dimen name="view_right_margin">16dp</dimen>
+
+
 </resources>

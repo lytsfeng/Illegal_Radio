@@ -96,7 +96,12 @@ public class ActivityBase extends Activity {
         _Transaction.commit();
     }
 
-
+    protected void startService(Class<?> cls) {
+        startService(new Intent(this, cls));
+    }
+    protected void stopService(Class<?> cls) {
+        stopService(new Intent(this, cls));
+    }
 
 
 

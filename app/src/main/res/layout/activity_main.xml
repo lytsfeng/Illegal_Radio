@@ -7,13 +7,14 @@
     <FrameLayout
         android:id="@+id/main_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
+        android:layout_height="match_parent">
+    </FrameLayout>
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/multiple_actions"
         fab:fab_addButtonColorNormal="@color/white"
         fab:fab_addButtonColorPressed="@color/btn_background_over"
-        fab:fab_addButtonPlusIconColor="#ffff0000"
+        fab:fab_addButtonPlusIconColor="@color/black_semi_transparent"
         fab:fab_expandDirection="up"
         fab:fab_labelStyle="@style/menu_labels_style"
         fab:fab_addButtonSize="mini"
@@ -22,33 +23,53 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp">
+        android:layout_marginBottom="@dimen/view_bottom_margin"
+        android:layout_marginRight="@dimen/view_right_margin">
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/action_a"
+            android:id="@+id/action_map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/white"
+            android:onClick="OnClick"
             fab:fab_size="mini"
-            fab:fab_title="地图"
+            fab:fab_title="@string/action_map"
             fab:fab_colorPressed="@color/btn_background_over"/>
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/action_b"
+            android:id="@+id/action_spec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="OnClick"
             fab:fab_size="mini"
-            fab:fab_title="频谱"
+            fab:fab_title="@string/action_spec"
             fab:fab_colorNormal="@color/white"
             fab:fab_colorPressed="@color/btn_background_over"/>
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/action_c"
+            android:id="@+id/action_param"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@mipmap/device"
             fab:fab_size="mini"
-            fab:fab_title="参数"
+            fab:fab_title="@string/action_param"
             fab:fab_colorNormal="@color/white"
             fab:fab_colorPressed="@color/btn_background_over"/>
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/view_top_margin"
+        android:layout_marginLeft="@dimen/view_left_margin">
+        <TextView
+            style="@style/style_table_title"
+            android:text="地址"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/et_db_address"
+            style="@style/style_table_et_value"
+            android:text="127.0.0.1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
 </RelativeLayout>

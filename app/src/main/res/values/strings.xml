@@ -12,6 +12,12 @@
     <string name="set_database">数据库</string>
     <string name="set_device">设备</string>
     <string name="set_about">关于</string>
+    <string name="action_param">参数</string>
+    <string name="action_spec">频谱</string>
+    <string name="action_map">地图</string>
 
 
+    <array name="SQLiteDALClassName">
+
+    </array>
 </resources>

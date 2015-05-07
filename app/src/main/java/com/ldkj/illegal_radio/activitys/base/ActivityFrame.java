@@ -1,10 +1,6 @@
 package com.ldkj.illegal_radio.activitys.base;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
@@ -29,8 +25,6 @@ public class ActivityFrame extends ActivityBase {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
-
         return true;
     }
     @Override
