@@ -8,9 +8,10 @@ import android.util.Log;
 
 import com.ldkj.illegal_radio.activitys.MainActivity;
 import com.ldkj.illegal_radio.events.NetEvent;
+import com.ldkj.illegal_radio.events.SetParamEvent;
 import com.ldkj.illegal_radio.utils.Attribute;
-import com.ldkj.illegal_radio.utils.Devices.DeviceFactory;
-import com.ldkj.illegal_radio.utils.Devices.base.IDevice;
+import com.ldkj.illegal_radio.utils.devices.DeviceFactory;
+import com.ldkj.illegal_radio.utils.devices.base.IDevice;
 
 import de.greenrobot.event.EventBus;
 
@@ -80,26 +81,11 @@ public class WorkService extends Service {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-
-
-            /*
-                 SendCmd("TRAC:FEED:CONT MTRAC,ALW");
-                    SendCmd("TRAC:FEED:CONT IFPAN,NEV");
-
-
-
-                        m_LDBase.SendCmd("TRACE:FEED:CONTROL ITRACE,NEVER\n");
-            m_LDBase.SendCmd("TRACE:FEED:CONTROL IFPAN,NEVER\n");
-            m_LDBase.SendCmd("TRACE:FEED:CONTROL MTRACE,ALWAYS\n");
-            */
             device.sendCMD("TRAC:FEED:CONT MTRAC,ALW");
             device.sendCMD("TRAC:FEED:CONT IFPAN,NEV");
-
             device.sendCMD("SENS:FREQ:STAR 88000000 Hz");
             device.sendCMD("SENS:FREQ:STOP 108000000 Hz");
             device.sendCMD("SENS:FREQ:STEP 25000Hz");
-
             device.sendCMD("TRACE:FEED:CONTROL ITRACE,NEVER");
             device.sendCMD("TRACE:FEED:CONTROL IFPAN,NEVER");
             device.sendCMD("TRACE:FEED:CONTROL MTRACE,ALWAYS");
@@ -107,10 +93,10 @@ public class WorkService extends Service {
             device.sendCMD("INPut:ATT 0");
             device.sendCMD(Attribute.STARTSCAN);
 
+
+
             while (true){
                short[]  s =  device.getScanDate();
-
-
                 int i = 0;
                 i++;
             }
@@ -130,6 +116,12 @@ public class WorkService extends Service {
     public final class LocalBinder extends Binder {
         public WorkService getService() {
             return WorkService.this;
+        }
+    }
+
+    public void onEventMainThread(SetParamEvent event) {
+        if(device != null){
+            device.sendCMD(event.getParam());
         }
     }
 

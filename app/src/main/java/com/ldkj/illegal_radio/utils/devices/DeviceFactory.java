@@ -1,7 +1,7 @@
-package com.ldkj.illegal_radio.utils.Devices;
+package com.ldkj.illegal_radio.utils.devices;
 
 import com.ldkj.illegal_radio.models.DeviceConfig;
-import com.ldkj.illegal_radio.utils.Devices.base.IDevice;
+import com.ldkj.illegal_radio.utils.devices.base.IDevice;
 
 /**
  * Created by john on 15-5-6.

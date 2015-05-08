@@ -1,4 +1,4 @@
-package com.ldkj.illegal_radio.utils.Devices.base;
+package com.ldkj.illegal_radio.utils.devices.base;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,4 +1,4 @@
-package com.ldkj.illegal_radio.utils.Devices.base;
+package com.ldkj.illegal_radio.utils.devices.base;
 
 /**
  * Created by john on 15-5-6.

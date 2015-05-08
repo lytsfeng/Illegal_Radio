@@ -15,17 +15,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SettingActivity extends ActivityFrame {
-
-
-
-    private static Map<Integer,Fragment> fragmentMap = new HashMap<Integer,Fragment>(){
+    private static Map<Integer, Fragment> fragmentMap = new HashMap<Integer, Fragment>() {
         {
-            put(R.id.set_db,new DBFragment());
-            put(R.id.set_device,new DeviceFragment());
-            put(R.id.set_about,new AboutFragment());
+            put(R.id.set_db, new DBFragment());
+            put(R.id.set_device, new DeviceFragment());
+            put(R.id.set_about, new AboutFragment());
         }
     };
     private SharedPreferences preferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
