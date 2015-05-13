@@ -1,10 +1,11 @@
 package com.ldkj.illegal_radio.utils.devices.base;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 /**
  * Created by john on 15-5-6.
@@ -12,15 +13,15 @@ import java.net.Socket;
 public abstract class ADevice implements IDevice {
 
 
-    private Socket socket;
-    protected InputStream inputStream;
+    protected BufferedInputStream inputStream;
     protected OutputStream outputStream;
+    private Socket socket;
     private String address = "192.168.100.232";
     private int port = 65000;
     private boolean isconn = false;
 
 
-    public ADevice(String address,int port){
+    public ADevice(String address, int port) {
         this.address = address;
         this.port = port;
     }
@@ -30,8 +31,9 @@ public abstract class ADevice implements IDevice {
         close();
         try {
             socket = new Socket();
-            socket.connect(new InetSocketAddress(address,port),5000);
-            inputStream = socket.getInputStream();
+            socket.connect(new InetSocketAddress(address, port), 5000);
+            socket.setSoTimeout(1000);
+            inputStream = new BufferedInputStream(socket.getInputStream());
             outputStream = socket.getOutputStream();
             isconn = true;
         } catch (IOException e) {
@@ -39,33 +41,36 @@ public abstract class ADevice implements IDevice {
         }
         return isconn;
     }
+
     @Override
     public void close() {
         isconn = false;
-        try{
-            if(inputStream != null){
+        try {
+            if (inputStream != null) {
                 inputStream.close();
                 inputStream = null;
             }
-            if(outputStream != null){
+            if (outputStream != null) {
                 outputStream.close();
                 outputStream = null;
             }
-            if(socket != null){
+            if (socket != null) {
                 socket.close();
                 socket = null;
             }
-        }catch (IOException e){
+        } catch (IOException e) {
 
         }
     }
+
     @Override
     public boolean sendCMD(String pCMD) {
         boolean _isSend = false;
-        if(!isconn){
+        if (!isconn) {
+            resetConn();
             return _isSend;
         }
-        if(pCMD.indexOf("\n") == -1){
+        if (pCMD.indexOf("\n") == -1) {
             pCMD += "\n";
         }
         try {
@@ -80,26 +85,51 @@ public abstract class ADevice implements IDevice {
         return _isSend;
     }
 
+    protected void resetInput() {
+        try {
+            int _len = inputStream.available();
+            byte[] _buf = null;
+            if (_len > 0) {
+                _buf = readTcpData(_len);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-    protected int readData(byte[] _buf, int _PerIndex, int _DataLength) throws IOException {
+    protected int readData(byte[] _buf, int _PerIndex, int _DataLength) {
         int _Rec = 0;
         if (inputStream == null || !isconn) {
             return _Rec;
         }
-        _Rec = inputStream.read(_buf, _PerIndex, _DataLength);
+        try {
+            _Rec = inputStream.read(_buf, _PerIndex, _DataLength);
+        } catch (SocketTimeoutException e) {
+            _Rec = 0;
+        } catch (IOException e) {
+            _Rec = 0;
+        }
         return _Rec;
     }
-    protected byte[] readTcpData(int datalength) throws IOException {
+
+    protected byte[] readTcpData(int datalength) {
         byte[] _Data = new byte[datalength];
         int _index = 0;
         int readLength = 0;
-
-        while (readLength != datalength){
-            readLength += readData(_Data,_index+readLength,datalength-readLength);
+        while (readLength != datalength) {
+            int _recLen = datalength - readLength;
+            int _rec = readData(_Data, _index + readLength, _recLen);
+            if (_rec == 0) {
+                readLength = datalength;
+                _Data = null;
+            } else {
+                readLength += _rec;
+            }
         }
         return _Data;
     }
-    private void resetConn(){
+
+    private void resetConn() {
         close();
         connDevice();
     }

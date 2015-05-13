@@ -23,7 +23,7 @@ public class Scan {
 
 
     public int index = 0;
-    public short[] date;
+    public float[] date;
 
 
     public static Scan getScan() {
@@ -31,13 +31,13 @@ public class Scan {
         SharedPreferences preferences = OwnApplication.getContext().getSharedPreferences(PREFERENCENAME, Context.MODE_APPEND);
         _Scan.beginFreq = preferences.getString(BEGINFREQ, _Scan.beginFreq);
         _Scan.endFreq = preferences.getString(ENDFREQ, _Scan.endFreq);
-        _Scan.stepFreq = preferences.getString(STEPFREQ, _Scan.endFreq);
+        _Scan.stepFreq = preferences.getString(STEPFREQ, _Scan.stepFreq);
         _Scan.index = 0;
         BigDecimal begin = new BigDecimal(_Scan.beginFreq);
         BigDecimal end = new BigDecimal(_Scan.endFreq);
         BigDecimal setp = new BigDecimal(_Scan.stepFreq);
-        int _length = Integer.parseInt(end.subtract(begin).divide(setp).toString());
-        _Scan.date = new short[_length];
+        int _length = Integer.parseInt(end.subtract(begin).divide(setp).toString()) + 1;
+        _Scan.date = new float[_length];
         return _Scan;
     }
 

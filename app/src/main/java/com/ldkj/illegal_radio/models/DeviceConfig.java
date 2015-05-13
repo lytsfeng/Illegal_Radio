@@ -18,7 +18,7 @@ public class DeviceConfig {
 
     private static DeviceConfig config = new DeviceConfig();
 
-    public String address = "192.168.100.232";
+    public String address = "192.168.100.233";
     public int tcpPort = 65000;
     public int udpPort = 9999;
     public String type = "LD100";

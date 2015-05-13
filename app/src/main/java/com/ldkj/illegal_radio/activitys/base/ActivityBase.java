@@ -10,6 +10,9 @@ import android.widget.Toast;
 
 import com.ldkj.illegal_radio.views.CustomToast;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
+
 
 /**
  * Created by john on 15-4-10.
@@ -17,6 +20,7 @@ import com.ldkj.illegal_radio.views.CustomToast;
 public class ActivityBase extends Activity {
 
     private ProgressDialog progressDialog;
+    Queue<Float[]> spceQueue = new ArrayDeque<Float[]>();
 
     /**
      * 显示toast信息
@@ -96,13 +100,15 @@ public class ActivityBase extends Activity {
         _Transaction.commit();
     }
 
+    protected  Fragment getFreagment(int fragmentid){
+        return getFragmentManager().findFragmentById(fragmentid);
+    }
+
     protected void startService(Class<?> cls) {
         startService(new Intent(this, cls));
     }
     protected void stopService(Class<?> cls) {
         stopService(new Intent(this, cls));
     }
-
-
 
 }

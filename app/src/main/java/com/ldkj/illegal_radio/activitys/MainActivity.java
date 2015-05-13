@@ -10,13 +10,13 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.amap.api.maps.model.LatLng;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.ldkj.illegal_radio.R;
 import com.ldkj.illegal_radio.activitys.base.ActivityFrame;
 import com.ldkj.illegal_radio.events.NetEvent;
-import com.ldkj.illegal_radio.events.SpecEvent;
 import com.ldkj.illegal_radio.fragments.MapFragment;
 import com.ldkj.illegal_radio.fragments.OnFragmentInteractionListener;
 import com.ldkj.illegal_radio.fragments.SpecFragment;
@@ -61,10 +61,11 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_main);
-        EventBus.getDefault().register(this);
         floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
         preferences = getSharedPreferences(CONFIG_NAME, Context.MODE_APPEND);
+        EventBus.getDefault().register(this);
     }
 
     public void OnClick(View v) {
@@ -89,6 +90,7 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
 
     @Override
     protected void onResume() {
+
         showFreagment(R.id.main_fragment, fragmentMap.get(getFragment()));
         bindService(new Intent(this, WorkService.class), connection, BIND_AUTO_CREATE);
         startService(LocationService.class);
@@ -111,17 +113,34 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
     }
 
     // 事件接收
-
-    public void onEventMainThread(SpecEvent specEvent) {
-        byte[] da = specEvent.getData();
-        StringBuffer sb = new StringBuffer();
-        for (byte b : da) {
-            sb.append(b);
+    public void onupdate(float[] date) {
+        Fragment _Fragment = getFreagment(R.id.main_fragment);
+        if(_Fragment instanceof SpecFragment){
+            ((SpecFragment)_Fragment).update(date);
         }
-        Log.i(Attribute.TAG, "+++     " + new String(da));
-        Log.i(Attribute.TAG, "+++     " + sb.toString());
+
+        Log.i(Attribute.TAG, "--------------------------------------------------------------");
+        int _date = date.length;
+        for (int i = 0 ; i < _date; i++){
+            if(i > 0 & i < _date){
+                if(date[i] >= 20 ){
+                    if(date[i] > date[i-1] && date[i] > date[i+1]){
+                        float _freq = (float) ((i) * 0.025 + 88.0);
+                        Log.i(Attribute.TAG, "频率： "+_freq);
+                    }
+                }
+            }
+        }
+        Log.i(Attribute.TAG, "///////////////////////////////////////////////////////////////");
+
 
     }
+
+
+    public void onEventMainThread(float[] s){
+        onupdate(s);
+    }
+
 
     public void onEventMainThread(NetEvent netEvent){
         if(netEvent.isConn()){
@@ -132,6 +151,11 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
     public void onEventMainThread(LatLng latLng) {
         LogUtils.w(Attribute.TAG, String.format("MainActivity当前的位置为： %s", latLng.toString()));
     }
+
+
+
+
+
 
 
 }

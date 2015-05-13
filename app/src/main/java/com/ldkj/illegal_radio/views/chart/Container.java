@@ -11,10 +11,10 @@ import java.util.ArrayList;
  */
 public class Container {
 
-    protected float xMaxValue = (float) 101.4;
-    protected float xMinValue = (float) 81.4;
+    protected float xMaxValue = (float) 108;
+    protected float xMinValue = (float) 88;
     protected float yMinValue = -40;
-    protected float yMaxValue = 120;
+    protected float yMaxValue = 100;
     protected float xCursorPixel = -1;
     protected float yCursorPixel = -1;
     protected float x = 32, y = 32, width = 0, height = 0;
@@ -53,8 +53,10 @@ public class Container {
                 child.onDrawCustomChild(pCanvas);
             }
         }
+        onDrawLine(pCanvas);
         onDrawXMarker(pCanvas);
         onDrawYMarker(pCanvas);
+
         pCanvas.restore();
     }
 
@@ -92,6 +94,7 @@ public class Container {
         }
         updateXMarker();
         updateYMarker();
+
     }
 
     private void onDrawXMarker(Canvas pCanvas) {
@@ -157,10 +160,27 @@ public class Container {
         yMarkerY2 = yCursorPixel + MARKERHEIGHT;
     }
 
-    public void bindDate(ArrayList<Float> pDate){
+    public void bindDate(float[] pDate){
         synchronized (pointList){
             pointList.clear();
-            pointList.addAll(pDate);
+//            pointList.addAll(Arrays.<Float>asList(pDate));
+            int _dateLen = pDate.length;
+            for(int i = 0; i < _dateLen; i++){
+                pointList.add(pDate[i]);
+            }
+        }
+    }
+
+    private void onDrawLine(Canvas canvas){
+        Paint paint = new Paint();
+        paint.setColor(Color.GREEN);
+        paint.setStrokeWidth(2);
+        synchronized (pointList){
+            int _pointSize = pointList.size();
+            float _pFlag = (width -x) / (_pointSize - 1);
+            for(int i = 0; i < _pointSize -1; i++){
+                canvas.drawLine(_pFlag * i + x,getYPixelFromValue(pointList.get(i)), _pFlag * (i + 1) + x, getYPixelFromValue(pointList.get(i+1)), paint);
+            }
         }
     }
 

@@ -11,7 +11,7 @@ public interface IDevice {
     boolean sendCMD(String pCMD) ;
 
     double getLevel();
-    short[] getScanDate();
-    short[] getSpecDate();
+    float[] getScanDate();
+    float[] getSpecDate();
 
 }

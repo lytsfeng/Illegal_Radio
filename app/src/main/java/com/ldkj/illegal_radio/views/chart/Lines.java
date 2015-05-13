@@ -10,6 +10,7 @@ import android.view.SurfaceView;
 
 import com.ldkj.illegal_radio.utils.Attribute;
 import com.ldkj.illegal_radio.views.chart.childsviews.LineBG;
+import com.ldkj.illegal_radio.views.chart.childsviews.SpceLine;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -17,7 +18,7 @@ import java.util.TimerTask;
 /**
  * Created by john on 15-5-5.
  */
-public class Lines extends SurfaceView implements SurfaceHolder.Callback{
+public class Lines extends /*View*/ SurfaceView implements SurfaceHolder.Callback{
 
     private Canvas canvas;
     private Container chartContainer;
@@ -28,6 +29,8 @@ public class Lines extends SurfaceView implements SurfaceHolder.Callback{
         getHolder().addCallback(this);
         chartContainer = new Container();
         chartContainer.addChild(new LineBG());
+        chartContainer.addChild(new SpceLine());
+//        startDraw();
     }
 
     private void draw(){
@@ -38,9 +41,19 @@ public class Lines extends SurfaceView implements SurfaceHolder.Callback{
         this.getHolder().unlockCanvasAndPost(canvas);
     }
 
+//    @Override
+//    public void draw(Canvas canvas) {
+//        super.draw(canvas);
+//        if(chartContainer != null){
+//            chartContainer.onDraw(canvas);
+//        }
+//    }
 
-    public void bindData(){
-//        chartContainer.bindDate();
+
+    public void bindData(float[] date){
+        chartContainer.bindDate(date);
+        isChange = true;
+        isdraw = false;
     }
 
     @Override
@@ -81,7 +94,7 @@ public class Lines extends SurfaceView implements SurfaceHolder.Callback{
     }
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.i(Attribute.TAG,"surfaceDestroyed");
+        Log.i(Attribute.TAG, "surfaceDestroyed");
         stopDraw();
     }
 
@@ -101,7 +114,7 @@ public class Lines extends SurfaceView implements SurfaceHolder.Callback{
                     isdraw = true;
                 }
             }
-        },10,10);
+        },20,20);
     }
     private void stopDraw(){
         if(drawTimer != null){
@@ -109,5 +122,7 @@ public class Lines extends SurfaceView implements SurfaceHolder.Callback{
             drawTimer = null;
         }
     }
+
+
 
 }
