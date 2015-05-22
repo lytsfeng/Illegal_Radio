@@ -18,6 +18,8 @@ import com.amap.api.maps.model.LatLng;
 import com.ldkj.illegal_radio.utils.Attribute;
 import com.ldkj.illegal_radio.utils.LogUtils;
 
+import de.greenrobot.event.EventBus;
+
 public class LocationService extends Service implements AMapLocationListener {
 
     public static final String ACTION_LOCATION_CHANGE = "com.ldkj.env.LOCATION_CHANGE";
@@ -72,7 +74,7 @@ public class LocationService extends Service implements AMapLocationListener {
 
         if (_isChange) {
             oldLatlng = latLng = _LatLng;
-//            EventBus.getDefault().post(oldLatlng);
+            EventBus.getDefault().post(oldLatlng);
             saveLatlon();
         }
     }

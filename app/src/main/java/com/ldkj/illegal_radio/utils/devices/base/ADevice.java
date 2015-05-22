@@ -18,7 +18,7 @@ public abstract class ADevice implements IDevice {
     private Socket socket;
     private String address = "192.168.100.232";
     private int port = 65000;
-    private boolean isconn = false;
+    protected boolean isconn = false;
 
 
     public ADevice(String address, int port) {
@@ -67,7 +67,7 @@ public abstract class ADevice implements IDevice {
     public boolean sendCMD(String pCMD) {
         boolean _isSend = false;
         if (!isconn) {
-            resetConn();
+//            resetConn();
             return _isSend;
         }
         if (pCMD.indexOf("\n") == -1) {

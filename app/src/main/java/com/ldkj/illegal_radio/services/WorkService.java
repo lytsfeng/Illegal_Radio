@@ -3,37 +3,39 @@ package com.ldkj.illegal_radio.services;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.util.Log;
 
 import com.ldkj.illegal_radio.activitys.MainActivity;
 import com.ldkj.illegal_radio.events.NetEvent;
 import com.ldkj.illegal_radio.events.SetParamEvent;
+import com.ldkj.illegal_radio.models.DeviceConfig;
 import com.ldkj.illegal_radio.utils.Attribute;
+import com.ldkj.illegal_radio.utils.DataConversion;
+import com.ldkj.illegal_radio.utils.MyAudioTrack;
+import com.ldkj.illegal_radio.utils.Net.UDPServer;
 import com.ldkj.illegal_radio.utils.devices.DeviceFactory;
 import com.ldkj.illegal_radio.utils.devices.base.IDevice;
+
+import java.io.UnsupportedEncodingException;
+import java.net.SocketException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import de.greenrobot.event.EventBus;
 
 /**
  * Created by john on 15-4-24.
  */
-public class WorkService extends Service {
+public class WorkService extends Service implements UDPServer.UDPCallBack{
 
 
     private MainActivity activity;
     private IDevice device;
     private boolean isConn = false;
     private boolean isStart = false;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-//            EventBus.getDefault().post(new SpecEvent((Float[]) msg.obj));
-        }
-    };
+    private UDPServer udpServer;
+    private MyAudioTrack audioTrack;
 
     @Override
     public void onCreate() {
@@ -43,6 +45,7 @@ public class WorkService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Log.i(Attribute.TAG, "workserviceOnBind");
+        initPlay();
         EventBus.getDefault().register(this);
         device = DeviceFactory.getDevice();
         return new LocalBinder();
@@ -53,7 +56,7 @@ public class WorkService extends Service {
         Log.i(Attribute.TAG, "workserviceOnUnBind");
         device.close();
         EventBus.getDefault().unregister(this);
-
+        stopWork();
         return super.onUnbind(intent);
     }
 
@@ -63,6 +66,7 @@ public class WorkService extends Service {
     }
 
     private void startWork() {
+        Log.i(Attribute.TAG, "startwork");
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -72,89 +76,77 @@ public class WorkService extends Service {
                         isConn = device.connDevice();
                         Thread.sleep(1000);
                     }
+                    startUDPServer();
                     EventBus.getDefault().post(new NetEvent(true));
+                    sendCMD(Attribute.DELETEUDP);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
     }
-
-    public void onEventMainThread(NetEvent netEvent) {
-        if (netEvent.isConn()) {
-            isStart = true;
-            startScan();
-//            startSingle();
+    public void stopWork(){
+        Log.i(Attribute.TAG, "//////////////////////////////" );
+        isStart = false;
+    }
+    public boolean sendCMD(String pCMD){
+        if(device != null){
+           return  device.sendCMD(pCMD);
         }
+        return false;
+    }
+
+    public float[] readCMD(Attribute.DATATYPE datatype){
+
+        float[] _date = null;
+        if(device != null){
+            switch (datatype){
+                case IQDATA:
+                    _date = device.getIQData();
+                    break;
+                case SCANDATA:
+                    _date = device.getScanData();
+                    break;
+                case SPECDATE:
+                    _date = device.getSpecData();
+                    break;
+                default:
+                    _date = null;
+                    break;
+            }
+        }
+        return _date;
     }
 
 
-    private void startScan(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                device.sendCMD(Attribute.STOPSCAN);
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                device.sendCMD("FREQ:MODE DSC");
-                device.sendCMD("TRAC:FEED:CONT MTRAC,ALW");
-                device.sendCMD("TRAC:FEED:CONT IFPAN,NEV");
-                device.sendCMD("SENS:FREQ:DSCan:STAR 88000000 Hz");
-                device.sendCMD("SENS:FREQ:DSCan:STOP 108000000 Hz");
-                device.sendCMD("SENS:FREQ:DSCan:STEP 25000Hz");
-                device.sendCMD("TRACE:FEED:CONTROL ITRACE,NEVER");
-                device.sendCMD("TRACE:FEED:CONTROL IFPAN,NEVER");
-                device.sendCMD("TRACE:FEED:CONTROL MTRACE,ALWAYS");
-                device.sendCMD("INPut:ATTenuation:MODE NORM");
-                device.sendCMD("INPut:ATT 30");
-                device.sendCMD(Attribute.STARTSCAN);
-                while (isStart) {
-                    float[] s = device.getScanDate();
-                    if (s != null) {
-                        if (activity != null) {
-                            EventBus.getDefault().post(s);
-                        }
-                    }
-                }
+    public boolean startTask(Attribute.TASKTYPE tasktype){
+        boolean _success = false;
+        if(device != null){
+            switch (tasktype){
+                case SINGLE:
+                    _success = device.startSingle();
+                    break;
+                case SCAN:
+                    _success = device.startScan();
+                    break;
+                default:
+                    break;
             }
-
-        }).start();
+        }
+        return _success;
     }
 
 
 
-    private void startSingle() {
-        device.sendCMD("FREQ:MODE CW");
-        device.sendCMD("TRAC:FEED:CONT MTRAC,NEV");
-        device.sendCMD("TRAC:FEED:CONT IFPAN,ALW");
-        device.sendCMD("SENS:FREQ 91400000 Hz");
-        device.sendCMD("FREQ:SPAN 20000000 Hz");
-        device.sendCMD("INPut:ATT 30");
-        device.sendCMD("SYSTEM:CHANNEL:BANDwidth 0, 125000 Hz");
-        device.sendCMD("SYSTEM:CHAnnel:AUDio 0_");
-        device.sendCMD("TRAC:FEED:CONT IF,ALW");
-        device.sendCMD("SYSTEM:CHAnnel:IF 1_");
-//        device.sendCMD("TRAC:UDP:TAG \"" + NetUtil.getLocalIpAddress() + "\",\""
-//                + config.UDPPort + "\",AUDIO\n");
-        String cmd = "SENSe:FUNCtion:ON  \"VOLT:AC\",\"FREQ:OFFS\",\"FSTR\",\"AM\",\"AM:POS\",\"AM:NEG\",\"FM\",\"FM:POS\",\"FM:NEG\",\"PM\",\"BAND\"";
-        device.sendCMD(cmd);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (isStart) {
-                    float[] s = device.getSpecDate();
-                    if (s != null) {
-                        if (activity != null) {
-                            EventBus.getDefault().post(s);
-                        }
-                    }
-                }
+    private void startUDPServer() {
+        if (udpServer == null){
+            try {
+                udpServer = new UDPServer(DeviceConfig.getDeviceConfig().udpPort, WorkService.this);
+                new Thread(udpServer).start();
+            } catch (SocketException e) {
+                e.printStackTrace();
             }
-        }).start();
+        }
 
     }
 
@@ -162,7 +154,7 @@ public class WorkService extends Service {
 
     @Override
     public void onDestroy() {
-        isStart = false;
+
         super.onDestroy();
     }
 
@@ -172,9 +164,60 @@ public class WorkService extends Service {
         }
     }
 
+    @Override
+    public void udpDate(byte[] pDate) {
+        if(isSound){
+            soundDataAnalysis(pDate);
+        }
+    }
+
     public final class LocalBinder extends Binder {
         public WorkService getService() {
             return WorkService.this;
+        }
+    }
+
+    private void initPlay() {
+        if (audioTrack == null) {
+            audioTrack = new MyAudioTrack();
+            audioTrack.init();
+        }
+    }
+
+    //播放声音
+    private void playSound(ByteBuffer ioBuffer) throws UnsupportedEncodingException {
+        short tag = ioBuffer.getShort();
+        if (tag != 401) {
+            return;
+        }
+        int _len = ioBuffer.getInt();
+        String _ChannelStr = DataConversion.Byte2Hex(ioBuffer.get());
+        String freqStr = ioBuffer.getLong() + "";
+        int bw = ioBuffer.getInt();
+        byte[] c = new byte[4];
+        ioBuffer.get(c);
+        int count = _len - 23;
+        if (count < 0) {
+            return;
+        }
+        byte[] radio = new byte[count];
+        ioBuffer.get(radio);
+        audioTrack.playAudioTrack(radio, 0, count);
+    }
+    private boolean isSound =  true;
+    public void setSound(boolean isSound) {
+        this.isSound = isSound;
+    }
+
+    protected void soundDataAnalysis(Object obj) {
+        byte[] _b = (byte[]) obj;
+        ByteBuffer _BB = ByteBuffer.wrap(_b);
+        _BB.order(ByteOrder.LITTLE_ENDIAN);
+        _BB.position(20);
+        try {
+            playSound(_BB);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
     }
 

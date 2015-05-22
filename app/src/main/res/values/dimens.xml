@@ -23,5 +23,10 @@
     <dimen name="view_bottom_margin">16dp</dimen>
     <dimen name="view_right_margin">16dp</dimen>
 
+    <dimen name="param_setting_padding_top">5dp</dimen>
+    <dimen name="param_setting_padding_left">5dp</dimen>
+    <dimen name="param_setting_padding_right">5dp</dimen>
+    <dimen name="param_setting_padding_bottom">0dp</dimen>
+
 
 </resources>

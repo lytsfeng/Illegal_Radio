@@ -13,12 +13,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.ldkj.illegal_radio.R;
+import com.ldkj.illegal_radio.fragments.base.FragmentBase;
 import com.ldkj.illegal_radio.models.DBConfig;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DBFragment extends Fragment {
+public class DBFragment extends FragmentBase {
 
     private DBConfig dbConfig;
     private EditText etAddress;
@@ -44,6 +45,22 @@ public class DBFragment extends Fragment {
         addListener();
         return _view;
     }
+
+    @Override
+    protected void stopSelfTask() {
+
+    }
+
+    @Override
+    protected void startNewTask() {
+
+    }
+
+    @Override
+    public void updateData(float[] data) {
+
+    }
+
 
     private void initView(View view) {
         etAddress = (EditText) view.findViewById(R.id.et_db_address);

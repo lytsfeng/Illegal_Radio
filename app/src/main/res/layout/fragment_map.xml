@@ -26,12 +26,15 @@
             android:src="@mipmap/ic_delete"
             style="@style/map_icon_style_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            />
         <CheckBox
             android:id="@+id/map_icon_maker"
             android:button="@mipmap/ic_maker"
             style="@style/map_icon_style_checkbox"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
     </LinearLayout>
 </RelativeLayout>

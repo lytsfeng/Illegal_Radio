@@ -10,8 +10,12 @@ public interface IDevice {
     void close();
     boolean sendCMD(String pCMD) ;
 
-    double getLevel();
-    float[] getScanDate();
-    float[] getSpecDate();
+
+    boolean startScan();
+    boolean startSingle();
+
+    float[] getIQData();
+    float[] getScanData();
+    float[] getSpecData();
 
 }

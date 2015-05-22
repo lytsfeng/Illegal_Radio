@@ -7,9 +7,10 @@ import com.ldkj.illegal_radio.R;
 import java.util.ArrayList;
 
 
+
 public class SQLiteDateBaseConfig {
 	
-	private static final String DATABASE_NAME = "Illegal_Radio";
+	private static final String DATABASE_NAME = "GoDutchDataBase";
 	private static final int VERSION = 1;
 	private static SQLiteDateBaseConfig INSTANCE;
 	private static Context mContext;

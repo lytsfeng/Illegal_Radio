@@ -16,6 +16,21 @@ public class Attribute {
     public static final int MSG_WORK_AUDIO_DATE = 300013;
 
 
+    public static final int  AVG_COUNT = 10;
+
+
+    public enum DATATYPE{
+        SCANDATA,SPECDATE,IQDATA
+    }
+    public enum TASKTYPE{
+        SCAN,SINGLE,NO
+    }
+
+
+    public static final  String GHZ = "GHz";
+    public static final  String MHZ = "MHz";
+    public static final  String KHZ = "KHz";
+
 
     public static final String VERTION = "*idn?\n"; // 版本询问命令
     public static final String OPTION = "*opt?\n"; // 选件命令

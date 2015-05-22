@@ -1,10 +1,131 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ldkj.illegal_radio.fragments.SingleFragment">
+    android:paddingTop="@dimen/param_setting_padding_top"
+    android:paddingRight="@dimen/param_setting_padding_right"
+    android:paddingLeft="@dimen/param_setting_padding_left"
+    android:paddingBottom="@dimen/param_setting_padding_bottom"
+    >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <TableRow
+        style="@style/StyleTable">
 
-</FrameLayout>
+        <TextView
+            style="@style/StyleTableTitle"
+            android:text="@string/center_freq"/>
+
+        <TextView
+            android:id="@+id/id_single_center_freq"
+            style="@style/StyleTableValue"
+            android:clickable="true"
+            android:text="91.4MHz"
+            />
+    </TableRow>
+
+    <TableRow
+        style="@style/StyleTable"
+        >
+
+        <TextView
+            style="@style/StyleTableTitle"
+            android:text="@string/freq_bandwidth"/>
+
+        <TextView
+            android:id="@+id/id_single_freq_bandwidth"
+            style="@style/StyleTableValue"
+            android:clickable="true"
+            android:text="20MHz"/>
+    </TableRow>
+
+    <TableRow
+        style="@style/StyleTable">
+
+        <TextView
+            style="@style/StyleTableTitle"
+            android:text="@string/filter_bandwidth"/>
+
+        <TextView
+            android:id="@+id/id_single_filter_bandwidth"
+            style="@style/StyleTableValue"
+            android:clickable="true"
+            android:text="50KHz"/>
+    </TableRow>
+
+    <TableRow
+        style="@style/StyleTable">
+
+        <TextView
+            style="@style/StyleTableTitle"
+            android:text="@string/attenuation_control"/>
+
+        <TextView
+            android:id="@+id/id_single_attenuation_control"
+            style="@style/StyleTableValue"
+            android:clickable="true"
+            android:text="10dB"/>
+    </TableRow>
+
+    <TableRow
+        style="@style/StyleTable">
+
+        <TextView
+            style="@style/StyleTableTitle"
+            android:text="@string/demodulation_mode"
+            />
+
+        <TextView
+            android:id="@+id/id_single_demodulation_mode"
+            style="@style/StyleTableValue"
+            android:text="FM"
+            android:clickable="true"
+            />
+
+    </TableRow>
+
+    <TableRow
+        style="@style/StyleTable">
+
+        <TextView
+            style="@style/StyleTableTitle"
+            android:text="@string/level_avg"
+            />
+
+        <TextView
+            android:id="@+id/id_single_level_avg"
+            style="@style/StyleTableValue"
+            android:text="0"
+            android:clickable="true"
+            />
+
+    </TableRow>
+
+    <TableRow
+        style="@style/StyleTable">
+
+        <TextView
+            style="@style/StyleTableTitle"
+            android:text="@string/sound_title"
+            />
+
+        <TextView
+            android:id="@+id/id_single_sound_param"
+            style="@style/StyleTableValue"
+            android:text="接收机声音"
+            android:clickable="true"
+            />
+
+    </TableRow>
+
+    <TextView
+        android:id="@+id/id_single_single_level"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="80sp"
+        android:textColor="#ff189800"
+        />
+
+
+</TableLayout>

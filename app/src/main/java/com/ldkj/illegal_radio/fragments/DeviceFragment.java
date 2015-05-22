@@ -1,7 +1,6 @@
 package com.ldkj.illegal_radio.fragments;
 
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +10,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.ldkj.illegal_radio.R;
+import com.ldkj.illegal_radio.fragments.base.FragmentBase;
 import com.ldkj.illegal_radio.models.DeviceConfig;
 
-public class DeviceFragment extends Fragment {
+public class DeviceFragment extends FragmentBase {
 
 
     private DeviceConfig config;
@@ -37,6 +37,22 @@ public class DeviceFragment extends Fragment {
         addListener();
         return _View;
     }
+
+    @Override
+    protected void stopSelfTask() {
+
+    }
+
+    @Override
+    protected void startNewTask() {
+
+    }
+
+    @Override
+    public void updateData(float[] data) {
+
+    }
+
     private void initView(View v) {
         etAddress = (EditText) v.findViewById(R.id.et_device_address);
         etTcpPort = (EditText) v.findViewById(R.id.et_device_tcp_port);
@@ -75,7 +91,7 @@ public class DeviceFragment extends Fragment {
                 case R.id.tv_device_type:
                     break;
                 case R.id.ibtn_device_cannel:
-                    getActivity().finish();
+//                    getActivity().finish();
                     break;
                 case R.id.ibtn_device_ok:
                     saveDeviceConfig();

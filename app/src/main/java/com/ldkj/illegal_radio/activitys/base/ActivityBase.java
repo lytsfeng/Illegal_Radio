@@ -27,14 +27,14 @@ public class ActivityBase extends Activity {
      * @param pMsgId　要显示的信息的ID
      */
     protected void showMsg(int pMsgId){
-        CustomToast.showToast(this, pMsgId, Toast.LENGTH_SHORT);
+        CustomToast.showToast(this, pMsgId, Toast.LENGTH_LONG);
     }
     /**
      * 显示toast信息
      * @param pMsg 要显示的信息
      */
     protected void showMsg(String pMsg) {
-        CustomToast.showToast(this,pMsg,Toast.LENGTH_SHORT);
+        CustomToast.showToast(this, pMsg, Toast.LENGTH_LONG);
     }
     /**
      * 通过action打开activity
@@ -87,6 +87,9 @@ public class ActivityBase extends Activity {
 
 
     protected void showFreagment(int fragmentID, Fragment fragment){
+        if(fragment == null){
+            return;
+        }
         FragmentManager _Manager = getFragmentManager();
         FragmentTransaction _Transaction = _Manager.beginTransaction();
         _Transaction.replace(fragmentID,fragment);

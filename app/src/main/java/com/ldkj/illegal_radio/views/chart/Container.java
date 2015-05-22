@@ -4,7 +4,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import com.ldkj.illegal_radio.events.ThresholdEvent;
+import com.ldkj.illegal_radio.utils.Utils;
+
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by john on 15-5-5.
@@ -13,8 +20,8 @@ public class Container {
 
     protected float xMaxValue = (float) 108;
     protected float xMinValue = (float) 88;
-    protected float yMinValue = -40;
-    protected float yMaxValue = 100;
+    protected float yMinValue = -20;
+    protected float yMaxValue = 80;
     protected float xCursorPixel = -1;
     protected float yCursorPixel = -1;
     protected float x = 32, y = 32, width = 0, height = 0;
@@ -25,7 +32,7 @@ public class Container {
     protected float yMarkerX1 = -1,yMarkerY1 = -1,yMarkerX2 = -1,yMarkerY2= -1;
 
     protected ArrayList<Float> pointList = new ArrayList<>();
-
+    protected Set<String> illegalList = new HashSet<>();
     public Container() {
         childView = new ArrayList<>();
     }
@@ -53,6 +60,7 @@ public class Container {
                 child.onDrawCustomChild(pCanvas);
             }
         }
+        onDrawIllegalMarker(pCanvas);
         onDrawLine(pCanvas);
         onDrawXMarker(pCanvas);
         onDrawYMarker(pCanvas);
@@ -101,30 +109,62 @@ public class Container {
         Paint paint = new Paint();
         paint.setColor(Color.BLUE);
         pCanvas.drawLine(xCursorPixel, y, xCursorPixel, height, paint);
+        paint.setColor(Color.YELLOW);
+        paint.setAlpha(100);
         pCanvas.drawRect(xMarkerX1, xMarkerY1, xMarkerX2, xMarkerY2, paint);
+        paint.setColor(Color.BLUE);
+        paint.setTextSize(45);
+        pCanvas.drawText(String.format("%.2f", getXValueFromPixel(xCursorPixel)), xMarkerX1 + (MARKERHEIGHT/4), height - (MARKERHEIGHT/2), paint);
     }
+
+    private String oldValue = "";
+    private float oldY = 0;
     private void onDrawYMarker(Canvas pCanvas) {
+        String _Value = String.format("%.0f", getYValueFromPixel(yCursorPixel));
+        if(!oldValue.equalsIgnoreCase(_Value) && oldY == yCursorPixel){
+            yCursorPixel = getYPixelFromValue(Float.parseFloat(oldValue));
+            _Value = oldValue;
+        }
+        if(!oldValue.equalsIgnoreCase(_Value)){
+            EventBus.getDefault().post(new ThresholdEvent(Integer.parseInt(_Value)));
+            oldValue = _Value;
+        }
         Paint paint = new Paint();
         paint.setColor(Color.BLUE);
         pCanvas.drawLine(x, yCursorPixel, width, yCursorPixel, paint);
+        oldY = yCursorPixel;
         paint.setColor(Color.YELLOW);
         paint.setAlpha(100);
         pCanvas.drawRect(yMarkerX1, yMarkerY1, yMarkerX2, yMarkerY2, paint);
         paint.setColor(Color.BLUE);
-        paint.setTextSize(30);
-        pCanvas.drawText(getYValueFromPixel(yCursorPixel) + "", xMarkerX1, yCursorPixel, paint);
+        paint.setTextSize(40);
+        pCanvas.drawText(_Value, width-(MARKERHEIGHT/4), yCursorPixel, paint);
     }
 
+    private void onDrawIllegalMarker(Canvas pCanvas){
+        if(illegalList.size() > 0){
+            for (String freq: illegalList) {
+                float _f = Float.parseFloat(freq);
+                float minX = getXPixelFromValue((float) (_f- 0.125));
+                float maxx = getXPixelFromValue((float) (_f + 0.125));
+                Paint paint = new Paint();
+                paint.setColor(Color.RED);
+                paint.setAlpha(100);
+                pCanvas.drawRect(minX,y,maxx,height,paint);
+            }
+        }
+    }
 
+    private float getFreq(Long pFreq){
+        return (float) (pFreq / Math.pow(10,6));
+    }
     public boolean isSelectXMarker(float x,float y){
         return x > xMarkerX1 && x < xMarkerX2 && y>xMarkerY1 && y < xMarkerY2;
     }
     public boolean isSelectYMarker(float x,float y){
         return x > yMarkerX1 && x < yMarkerX2 && y>yMarkerY1 && y < yMarkerY2;
     }
-
     public void updatexCursorPixel(float xCursorPixelMove){
-
         if(xCursorPixelMove > width){
             xCursorPixel = width;
             return;
@@ -160,10 +200,20 @@ public class Container {
         yMarkerY2 = yCursorPixel + MARKERHEIGHT;
     }
 
+
+    public void updateIllegal(String freq,boolean isAdd){
+       synchronized (illegalList){
+           if(isAdd){
+               illegalList.add(Utils.removalUnit(freq));
+           }else {
+               illegalList.remove(freq);
+           }
+       }
+    }
+
     public void bindDate(float[] pDate){
         synchronized (pointList){
             pointList.clear();
-//            pointList.addAll(Arrays.<Float>asList(pDate));
             int _dateLen = pDate.length;
             for(int i = 0; i < _dateLen; i++){
                 pointList.add(pDate[i]);

@@ -123,6 +123,9 @@ public class Lines extends /*View*/ SurfaceView implements SurfaceHolder.Callbac
         }
     }
 
+    public void updateIllegalMarker(String freq,Boolean isadd){
+        chartContainer.updateIllegal(freq,isadd);
+    }
 
 
 }

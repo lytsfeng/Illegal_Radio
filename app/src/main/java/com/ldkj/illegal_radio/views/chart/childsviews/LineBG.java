@@ -34,8 +34,9 @@ public class LineBG extends Container {
     }
     private void onDrawY(Canvas pCanvas){
         float _YColunt = yMaxValue - yMinValue;
-        float _flag = _YColunt / 7;
-        for (int i =0; i < 8; i++){
+        int _f = (int) (_YColunt / 20 + 1);
+        float _flag = _YColunt / 5;
+        for (int i =0; i < 6; i++){
             float _Value = _YColunt - i * _flag + yMinValue;
             float _Pixel = getYPixelFromValue(_Value);
             pCanvas.drawLine(x,_Pixel,width,_Pixel,paint);

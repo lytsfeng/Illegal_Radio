@@ -1,6 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="SQLiteDALClassName">
-        <item>SQLiteDALStation</item>
+        <item>SQLiteDALIllegalRadio</item>
     </array>
+
+    <array name="menu_left_item_name">
+        <item>地图</item>
+        <item>扫描</item>
+        <item>分析</item>
+        <item>设置</item>
+        <item>关于</item>
+    </array>
+
+    <array name="FragmentClassName">
+        <item>MapFragment</item>
+        <item>ScanFragment</item>
+        <item>SingleFragment</item>
+        <item>SettingFragment</item>
+        <item>AboutFragment</item>
+    </array>
+    <array name="illegal_status_name">
+        <item>未处理</item>
+        <item>以处理</item>
+    </array>
+
+
+    <string-array name="array_demodulation_mode">
+        <item>不解调</item>
+        <item>FM</item>
+        <item>AM</item>
+    </string-array>
+    <string-array name="array_squelch_threshold">
+        <item>打开</item>
+        <item>关闭</item>
+    </string-array>
+    <string-array name="array_sound">
+        <item>静音</item>
+        <item>语音播报</item>
+        <item>接收机声音</item>
+    </string-array>
+    <string-array name="array_attenuation_control">
+        <item>0dB</item>
+        <item>10dB</item>
+        <item>20dB</item>
+        <item>30dB</item>
+    </string-array>
+    <string-array name="array_filter_bandwidth">
+        <item>0.8KHz</item>
+        <item>1KHz</item>
+        <item>2KHz</item>
+        <item>4KHz</item>
+        <item>5KHz</item>
+        <item>6.25KHz</item>
+        <item>10KHz</item>
+        <item>12.5KHz</item>
+        <item>20KHz</item>
+        <item>25KHz</item>
+        <item>50KHz</item>
+        <item>100KHz</item>
+        <item>125KHz</item>
+        <item>250KHz</item>
+    </string-array>
+    <string-array name="array_freq_bandwidth">
+        <item>0.8KHz</item>
+        <item>1KHz</item>
+        <item>2KHz</item>
+        <item>4KHz</item>
+        <item>5KHz</item>
+        <item>6.25KHz</item>
+        <item>10KHz</item>
+        <item>12.5KHz</item>
+        <item>20KHz</item>
+        <item>25KHz</item>
+        <item>50KHz</item>
+        <item>100KHz</item>
+        <item>125KHz</item>
+        <item>250KHz</item>
+        <item>500KHz</item>
+        <item>625KHz</item>
+        <item>1MHz</item>
+        <item>1.25MHz</item>
+        <item>2.5MHz</item>
+        <item>5MHz</item>
+        <item>10MHz</item>
+        <item>20MHz</item>
+    </string-array>
+    <string-array name="array_levelavg">
+        <item>实时</item>
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>40</item>
+        <item>50</item>
+    </string-array>
+
+
 </resources>

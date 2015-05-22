@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="35dp"
+    android:stretchColumns="1">
+
+    <TableRow android:background="@drawable/onclick_selector">
+        <TextView
+            android:id="@+id/id_item_illegal_freq"
+            android:layout_width="80dp"
+            android:layout_height="35dp"
+            android:background="@drawable/background_shape_transparent"
+            android:gravity="center"
+            android:text="频率(MHz)" />
+        <TextView
+            android:id="@+id/id_item_illegal_time"
+            android:layout_height="35dp"
+            android:background="@drawable/background_shape_transparent"
+            android:gravity="center"
+            android:text="@string/illegal_info_time" />
+
+        <TextView
+            android:id="@+id/id_item_illegal_lat"
+            android:layout_width="65dp"
+            android:layout_height="35dp"
+            android:background="@drawable/background_shape_transparent"
+            android:gravity="center"
+            android:text="@string/illegal_info_lat" />
+        <TextView
+            android:id="@+id/id_item_illegal_lon"
+            android:layout_width="65dp"
+            android:layout_height="35dp"
+            android:background="@drawable/background_shape_transparent"
+            android:gravity="center"
+            android:text="@string/illegal_info_lon" />
+    </TableRow>
+
+
+</TableLayout>

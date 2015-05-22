@@ -1,0 +1,165 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/param_setting_padding_top"
+    android:paddingRight="@dimen/param_setting_padding_right"
+    android:paddingLeft="@dimen/param_setting_padding_left"
+    android:paddingBottom="@dimen/param_setting_padding_bottom">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            style="@style/StyleTableTitle"
+            android:text="@string/illegal_info_freq"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/id_illegal_info_freq"
+            style="@style/StyleTableValue"
+            android:clickable="true"
+            android:text="91.4MHz"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            style="@style/StyleTableTitle"
+            android:text="@string/illegal_info_status"/>
+        <TextView
+            android:id="@+id/id_illegal_info_status"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            style="@style/StyleTableValue"
+            android:clickable="true"
+            android:text="91.4MHz"
+            />
+    </LinearLayout>
+
+   <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            style="@style/StyleTableTitle"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="@string/illegal_info_time"/>
+        <TextView
+            android:id="@+id/id_illegal_info_time"
+            style="@style/StyleTableValue"
+            android:clickable="true"
+            android:text="91.4MHz"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            style="@style/StyleTableTitle"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="@string/illegal_info_lat"/>
+        <TextView
+            android:id="@+id/id_illegal_info_lat"
+            style="@style/StyleTableValue"
+            android:clickable="true"
+            android:text="91.4MHz"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            style="@style/StyleTableTitle"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="@string/illegal_info_lon"/>
+        <TextView
+            android:id="@+id/id_illegal_info_lon"
+            style="@style/StyleTableValue"
+            android:clickable="true"
+            android:text="91.4MHz"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            style="@style/StyleTableTitle"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="@string/illegal_info_address"/>
+        <EditText
+            android:id="@+id/id_illegal_info_address"
+            style="@style/StyleTableValue"
+            android:clickable="true"
+            android:text="91.4MHz"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            style="@style/StyleTableTitle"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="@string/illegal_info_tag"/>
+        <EditText
+            android:id="@+id/id_illegal_info_tag"
+            style="@style/StyleTableValue"
+            android:clickable="true"
+            android:text="91.4MHz"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+       <Button
+           android:id="@+id/id_illegal_info_ok"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:text="@string/ok"/>
+        <Button
+            android:id="@+id/id_illegal_info_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancel"/>
+    </LinearLayout>
+
+
+</LinearLayout>
