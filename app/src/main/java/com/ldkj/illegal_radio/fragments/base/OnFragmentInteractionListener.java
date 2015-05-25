@@ -12,6 +12,9 @@ public interface OnFragmentInteractionListener {
     float[] getMeasureValue(Attribute.DATATYPE datatype);
     boolean startTask(Attribute.TASKTYPE tasktype);
     void stopTask(Attribute.TASKTYPE tasktype);
-    IllegalRadioModel updateIllegal(IllegalRadioModel model,boolean isAdd);
+    IllegalRadioModel updateIllegal(IllegalRadioModel model,Attribute.OPERATION_TYPE pType);
+
+    void setWorkStatus(boolean running);
+
 
 }

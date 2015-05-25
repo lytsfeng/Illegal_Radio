@@ -41,7 +41,7 @@ public class SingleFragment extends FragmentBase implements View.OnClickListener
 
     private Single single;
     private boolean isDraw = true;
-    private ArrayList<IllegalRadioModel> radioModels = new ArrayList<>();
+    private ArrayList<IllegalRadioModel> singleRadioModels = new ArrayList<>();
 
     public SingleFragment() {
         // Required empty public constructor
@@ -79,15 +79,15 @@ public class SingleFragment extends FragmentBase implements View.OnClickListener
     }
     private void bindDate(){
         single = Single.getSingle();
-        radioModels.addAll(((MainActivity) getActivity()).getIllegalRadioModelSet());
+        singleRadioModels.addAll(((MainActivity) getActivity()).getMainIllegalRadioModelSet());
         String _tmpFreq = single.centFreq;
-        if(radioModels.size() > 0){
+        if(singleRadioModels.size() > 0){
             Bundle _Bundle = getArguments();
             int index = 0;
             if(_Bundle != null){
                 index =  getArguments().getInt(ARG);
             }
-            _tmpFreq = radioModels.get(index).freq;
+            _tmpFreq = singleRadioModels.get(index).freq;
         }
         DialogBack(_tmpFreq,R.id.id_single_center_freq,true);
         DialogBack(single.freqBandWidth,R.id.id_single_freq_bandwidth,true);
@@ -219,7 +219,7 @@ public class SingleFragment extends FragmentBase implements View.OnClickListener
     }
 
 //    private void startSingle(String freq){
-//        for (IllegalRadioModel model :radioModels){
+//        for (IllegalRadioModel model :singleRadioModels){
 //            if(model.freq.equalsIgnoreCase(freq.trim())){
 //                DialogBack(single.freqBandWidth,R.id.id_single_freq_bandwidth,true);
 //                DialogBack(single.filterBandwidth,R.id.id_single_filter_bandwidth,true);
@@ -262,10 +262,10 @@ public class SingleFragment extends FragmentBase implements View.OnClickListener
     }
     private String[] getValue() {
 
-        int size = radioModels.size();
+        int size = singleRadioModels.size();
         String[] _array = new String[size];
         for (int i = 0; i < size; i++){
-            _array[i] = radioModels.get(i).freq;
+            _array[i] = singleRadioModels.get(i).freq;
         }
         return _array;
     }

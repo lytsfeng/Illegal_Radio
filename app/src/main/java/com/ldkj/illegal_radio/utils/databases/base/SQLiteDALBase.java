@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.ldkj.illegal_radio.models.IllegalRadioModel;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +52,15 @@ public abstract class SQLiteDALBase<T> implements SQLiteHelper.SQLiteDataTable{
         return _List;
     }
 
+
+    protected long getMaxId(){
+        String[] _NameAndPK = GetTableNameAndPK();
+        Cursor cursor = ExecSql("select last_insert_rowid() from "+_NameAndPK[0]);
+        cursor.moveToFirst();
+        long l = cursor.getLong(0);
+        return l;
+    }
+
     public Cursor ExecSql(String p_SqlText)
     {
         return GetDataBase().rawQuery(p_SqlText, null);
@@ -69,6 +80,6 @@ public abstract class SQLiteDALBase<T> implements SQLiteHelper.SQLiteDataTable{
 
     protected abstract T FindModel(Cursor pCursor);
     protected abstract String[] GetTableNameAndPK();
-
+    public abstract boolean Update(String pCondition,IllegalRadioModel illegalRadioModel);
 
 }

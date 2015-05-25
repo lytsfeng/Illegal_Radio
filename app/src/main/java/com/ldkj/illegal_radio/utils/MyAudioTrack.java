@@ -5,6 +5,11 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.util.Log;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
 /**
  * Created by john on 15-2-13.
  */
@@ -14,6 +19,8 @@ public class MyAudioTrack {
     private int mChannel;                                        // 声道
     private int mSampBit;                                        // 采样精度
     private AudioTrack mAudioTrack;
+    File file;
+    BufferedOutputStream bos;
     public MyAudioTrack(int frequency, int channel, int sampbit) {
         this.mFrequency = frequency;
         this.mChannel = channel;
@@ -21,6 +28,12 @@ public class MyAudioTrack {
     }
     public MyAudioTrack() {
         this(32000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
+        file = new File("/sdcard/temp.pcm");
+        try {
+            bos = new BufferedOutputStream(new FileOutputStream(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
     public void init() {
         if (mAudioTrack != null) {
@@ -59,6 +72,8 @@ public class MyAudioTrack {
         }
     }
 
+
+
     public void playAudioTrack(byte[] data, int offset, int length) {
         if (data == null || data.length == 0) {
             return;
@@ -66,11 +81,14 @@ public class MyAudioTrack {
 
         try {
             mAudioTrack.write(data, offset, length);
+            bos.write(data);
+            bos.flush();
         } catch (Exception e) {
             // TODO: handle exception
             Log.i("MyAudioTrack", "catch exception...");
         }
     }
+
 
 
 

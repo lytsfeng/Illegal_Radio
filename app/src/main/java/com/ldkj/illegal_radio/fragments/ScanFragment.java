@@ -33,7 +33,7 @@ public class ScanFragment extends FragmentBase {
 
     private Lines lines = null;
     private ListView infoValue = null;
-    private Set<IllegalRadioModel> illegalRadioModelSet = new HashSet<>();
+    private Set<IllegalRadioModel> scanIllegalRadioModelSet = new HashSet<>();
     private IllegalListAdapter listAdapter = null;
 
     public ScanFragment() {
@@ -75,9 +75,9 @@ public class ScanFragment extends FragmentBase {
     }
 
     private void binddata() {
-        illegalRadioModelSet = ((MainActivity) getActivity()).getIllegalRadioModelSet();
+        scanIllegalRadioModelSet.addAll(((MainActivity) getActivity()).getMainIllegalRadioModelSet());
         EventBus.getDefault().post(new UpdateViewEvent());
-        for (IllegalRadioModel model : illegalRadioModelSet) {
+        for (IllegalRadioModel model : scanIllegalRadioModelSet) {
             if (lines != null) {
                 lines.updateIllegalMarker(Utils.valueToMHz(model.freq) + "", true);
             }
@@ -103,12 +103,12 @@ public class ScanFragment extends FragmentBase {
         lines.updateIllegalMarker(pModel.freq, isAdd);
         boolean isSuccess = false;
         if (isAdd) {
-            if (illegalRadioModelSet.add(pModel)) {
+            if (scanIllegalRadioModelSet.add(pModel)) {
                 //更新列表
                 isSuccess = true;
             }
         } else {
-            if (illegalRadioModelSet.remove(pModel)) {
+            if (scanIllegalRadioModelSet.remove(pModel)) {
                 //更新列表
                 isSuccess = true;
             }
@@ -132,12 +132,12 @@ public class ScanFragment extends FragmentBase {
     class IllegalListAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return illegalRadioModelSet.size();
+            return scanIllegalRadioModelSet.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return illegalRadioModelSet.toArray()[position];
+            return scanIllegalRadioModelSet.toArray()[position];
         }
 
         @Override

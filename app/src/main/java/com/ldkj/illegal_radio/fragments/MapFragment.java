@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +55,7 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
     private boolean isConnDevice = false;
     private Marker positionMarker = null;
     private Map<IllegalRadioModel, Marker> Illegal_Marker_map = new HashMap<>();
-    private Set<IllegalRadioModel> illegalRadioModelSet = new HashSet<>();
+    private Set<IllegalRadioModel> mapIllegalRadioModelSet = new HashSet<>();
     private int positionMarkerIconId = -1;
     private boolean isFollow = false;
 
@@ -77,7 +76,6 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
             }
         }
     };
-    private boolean is = false;
 
     public MapFragment() {
     }
@@ -93,7 +91,6 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        pr("onCreateView");
         View _View = inflater.inflate(R.layout.fragment_map, container, false);
         initView(_View);
         addListener();
@@ -105,31 +102,21 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
 
     @Override
     public void updateIllegal(IllegalRadioModel pModel, boolean isAdd) {
-        pr("//////updateIllegal");
-        synchronized (illegalRadioModelSet) {
-            pr("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-            if (isAdd && illegalRadioModelSet.add(pModel)) {
-                pr("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        synchronized (mapIllegalRadioModelSet) {
+            if (isAdd && mapIllegalRadioModelSet.add(pModel)) {
                 drawMark(new LatLng(pModel.lat, pModel.lon), R.mipmap.ic_maker, false, pModel);
-                is = false;
-                if (listener != null) {
-                    listener.updateIllegal(pModel, true);
-                }
             } else if (!isAdd) {
                 Marker _marker = Illegal_Marker_map.get(pModel);
                 if (_marker != null) {
                     _marker.remove();
                     Illegal_Marker_map.remove(pModel);
-                    illegalRadioModelSet.remove(pModel);
-                    listener.updateIllegal(pModel, false);
-                    is = true;
+                    mapIllegalRadioModelSet.remove(pModel);
                 }
             }
         }
     }
 
     private void initMap() {
-        pr("initMap");
         aMap = mapView.getMap();
         aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_ROTATE);
         aMap.getUiSettings().setLogoPosition(
@@ -139,13 +126,12 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
         aMap.setOnMapLongClickListener(this);
         aMap.setOnMarkerClickListener(this);
         drawMark(getLastLatlon(), ((MainActivity) activity).isConn() ? R.mipmap.runenter : R.mipmap.error, true, null);
-        illegalRadioModelSet = ((MainActivity) activity).getIllegalRadioModelSet();
+        mapIllegalRadioModelSet.addAll(((MainActivity) activity).getMainIllegalRadioModelSet());
         initMarker();
         setCompass();
     }
 
     private void initView(View pView) {
-        pr("initView");
         btn_compass = (ImageButton) pView.findViewById(R.id.map_icon_compass);
         btn_delete = (ImageButton) pView.findViewById(R.id.map_icon_delete);
         if (!isDeleteBtnVisibility) {
@@ -155,8 +141,7 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
     }
 
     private void initMarker() {
-        pr("initMarker");
-        for (IllegalRadioModel illegalRadioModel : illegalRadioModelSet) {
+        for (IllegalRadioModel illegalRadioModel : mapIllegalRadioModelSet) {
             drawMark(new LatLng(illegalRadioModel.lat, illegalRadioModel.lon), R.mipmap.ic_maker, false, illegalRadioModel);
         }
     }
@@ -184,13 +169,10 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        pr("onMarkerClick");
         IllegalRadioModel _Model = (IllegalRadioModel) marker.getObject();
-
         if (_Model != null) {
             new IllegalInfoDialog(getActivity(), _Model, this).show();
         }
-
         return true;
     }
 
@@ -200,7 +182,6 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
      * @return
      */
     private LatLng getLastLatlon() {
-        pr("getLastLatlon");
         String _Lat = sharedPreferences.getString(LocationService.KEY_LATITUDE, "30.67").trim();
         String _lon = sharedPreferences.getString(LocationService.KEY_LONGITUDE, "104.06").trim();
         LatLng _latLng = new LatLng(Double.parseDouble(_Lat), Double.parseDouble(_lon));
@@ -234,7 +215,6 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
     }
 
     public void onEventMainThread(NetEvent netEvent) {
-        pr("onEventMainThread(NetEvent netEvent)");
         Boolean _isconn = netEvent.isConn();
 
         if (positionMarkerIconId == (isConnDevice || _isconn ? R.mipmap.runenter : R.mipmap.error)) {
@@ -252,7 +232,6 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
     }
 
     public void onEventMainThread(LatLng latLng) {
-        pr("onEventMainThread(LatLng latLng)");
         this.latLng = latLng;
         if (isConnDevice) {
             drawMark(latLng, R.mipmap.runenter, true, null);
@@ -262,16 +241,14 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
     }
 
     public void onEventMainThread(DrawMarkerEvent event) {
-        pr("onEventMainThread(DrawMarkerEvent event)");
         IllegalRadioModel _mode = event.getRadioModel();
         if (Illegal_Marker_map.get(_mode) == null)
             drawMark(new LatLng(_mode.lat, _mode.lon), R.mipmap.ic_maker, false, _mode);
-        illegalRadioModelSet.add(_mode);
+        mapIllegalRadioModelSet.add(_mode);
     }
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        pr("onMapLongClick");
         IllegalRadioModel _Model = new IllegalRadioModel();
         _Model.lat = latLng.latitude;
         _Model.lon = latLng.longitude;
@@ -281,7 +258,6 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
     }
 
     private void drawMark(LatLng latLng, int markerID, boolean isPosition, IllegalRadioModel markerTag) {
-        pr("drawMark");
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         BitmapDescriptor bitmap = BitmapDescriptorFactory
@@ -306,9 +282,36 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
 
     @Override
     public void DialogBack(IllegalRadioModel radioModel, int p_ResId, Boolean isInit) {
-        updateIllegal(radioModel, radioModel.handle <= 0 ? true : false);
-        pr("DialogBack");
+        if(radioModel.uid == -1 ){
+            updateIllegal(radioModel, Attribute.OPERATION_TYPE.INSTER);
+        }else if(radioModel.handle > 0){
+            updateIllegal(radioModel, Attribute.OPERATION_TYPE.DELETE);
+        }else if(radioModel.handle <= 0){
+            updateIllegal(radioModel, Attribute.OPERATION_TYPE.UPDATE);
+        }
     }
+
+    private void updateIllegal(IllegalRadioModel pModel,Attribute.OPERATION_TYPE pType){
+        IllegalRadioModel _Model = null;
+        if(listener != null){
+            _Model = listener.updateIllegal(pModel,pType);
+        }
+        if(_Model == null){
+            return;
+        }
+        switch (pType){
+            case DELETE:
+                updateIllegal(_Model,false);
+                break;
+            case INSTER:
+                updateIllegal(_Model,true);
+                break;
+            default:
+                break;
+        }
+
+    }
+
 
     @Override
     protected void stopSelfTask() {
@@ -320,11 +323,5 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
 
     @Override
     public void updateData(float[] data) {
-    }
-
-    private void pr(String plog) {
-        if (is) {
-            Log.i(Attribute.TAG, "+++++   " + plog + "  ++++++");
-        }
     }
 }

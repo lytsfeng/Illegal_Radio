@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class SQLiteDateBaseConfig {
 	
-	private static final String DATABASE_NAME = "GoDutchDataBase";
+	private static final String DATABASE_NAME = "IllegalRadio";
 	private static final int VERSION = 1;
 	private static SQLiteDateBaseConfig INSTANCE;
 	private static Context mContext;

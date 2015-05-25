@@ -25,6 +25,9 @@ public class Attribute {
     public enum TASKTYPE{
         SCAN,SINGLE,NO
     }
+    public enum OPERATION_TYPE{
+        UPDATE,INSTER,DELETE,SELECT
+    }
 
 
     public static final  String GHZ = "GHz";

@@ -40,12 +40,16 @@ public class DeviceFragment extends FragmentBase {
 
     @Override
     protected void stopSelfTask() {
-
+        if(listener != null){
+            listener.setWorkStatus(false);
+        }
     }
 
     @Override
     protected void startNewTask() {
-
+        if(listener != null){
+            listener.setWorkStatus(false);
+        }
     }
 
     @Override

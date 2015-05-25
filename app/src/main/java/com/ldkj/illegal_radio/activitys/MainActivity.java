@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.WindowManager;
 
 import com.amap.api.maps.model.LatLng;
 import com.ldkj.illegal_radio.R;
@@ -29,7 +30,6 @@ import com.ldkj.illegal_radio.services.LocationService;
 import com.ldkj.illegal_radio.services.WorkService;
 import com.ldkj.illegal_radio.utils.Attribute;
 import com.ldkj.illegal_radio.utils.DateTools;
-import com.ldkj.illegal_radio.utils.LogUtils;
 import com.ldkj.illegal_radio.utils.databases.base.SQLiteDALBase;
 import com.ldkj.illegal_radio.utils.databases.sqlitedal.SQLiteDALIllegalRadio;
 
@@ -54,7 +54,7 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
     private boolean isConn = false;
     private TaskThread taskThread = null;
     private SQLiteDALBase<IllegalRadioModel> illegalRadioModelSQLiteDALBase;
-    private Set<IllegalRadioModel> illegalRadioModelSet = new HashSet<>();
+    private Set<IllegalRadioModel> mainIllegalRadioModelSet = new HashSet<>();
     private int threshold = 30;
     private boolean isTaskRuning = false;
     private Attribute.TASKTYPE tasktype = Attribute.TASKTYPE.NO;
@@ -71,8 +71,8 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
         }
     };
 
-    public Set<IllegalRadioModel> getIllegalRadioModelSet() {
-        return illegalRadioModelSet;
+    public Set<IllegalRadioModel> getMainIllegalRadioModelSet() {
+        return mainIllegalRadioModelSet;
     }
 
     public Boolean isConn() {
@@ -82,6 +82,7 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -90,6 +91,7 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
             currentFragmentID = savedInstanceState.getInt(CONFIG_KEY_FRAGMENT);
         }
         initView();
+        bindData();
         openFragment(currentFragmentID, false);
     }
 
@@ -105,8 +107,8 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
 
     private void bindData() {
         List<IllegalRadioModel> _date = illegalRadioModelSQLiteDALBase.queryAll("and handle < 1");
-        illegalRadioModelSet.clear();
-        illegalRadioModelSet.addAll(_date);
+        mainIllegalRadioModelSet.clear();
+        mainIllegalRadioModelSet.addAll(_date);
     }
 
 
@@ -172,9 +174,9 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
                        stopTask(Attribute.TASKTYPE.SINGLE);
                        startTask(Attribute.TASKTYPE.SCAN);
                    }
-               },1*1000*60);
+               }, 1 * 1000 * 60);
            }
-       },5);
+       }, 5);
     }
 
     private void setDemodulation(String pValue) {
@@ -192,8 +194,10 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
         isConn = netEvent.isConn();
     }
 
+    private LatLng oldLatlng = null;
+
     public void onEventMainThread(LatLng latLng) {
-        LogUtils.w(Attribute.TAG, String.format("MainActivity当前的位置为： %verification", latLng.toString()));
+        oldLatlng = latLng;
     }
 
     @Override
@@ -228,19 +232,48 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
     }
 
     @Override
-    public IllegalRadioModel updateIllegal(IllegalRadioModel model, boolean isAdd) {
-        if (isAdd) {
-            if (!illegalRadioModelSet.add(model))
-                return null;
-        } else {
-            illegalRadioModelSet.remove(model);
-            return null;
+    public IllegalRadioModel updateIllegal(IllegalRadioModel model, Attribute.OPERATION_TYPE pType) {
+        IllegalRadioModel _Model1 = null;
+        switch (pType){
+            case UPDATE:
+                if(illegalRadioModelSQLiteDALBase != null){
+                    illegalRadioModelSQLiteDALBase.Update("and uid = "+model.uid,model);
+                    _Model1 = model;
+                }
+                break;
+            case DELETE:
+                if(mainIllegalRadioModelSet.remove(model)){
+                    if(illegalRadioModelSQLiteDALBase != null){
+                        illegalRadioModelSQLiteDALBase.Delete("and uid =" + model.uid);
+                    }
+                    _Model1 = model;
+                }
+                break;
+            case INSTER:
+                if(mainIllegalRadioModelSet.add(model)){
+                    if(illegalRadioModelSQLiteDALBase != null){
+                        _Model1 = illegalRadioModelSQLiteDALBase.install(model);
+                    }
+                }
+                break;
+            default:
+                break;
         }
+        return _Model1;
+    }
 
-        if (!illegalRadioModelSet.add(model)) {
-            return null;
+    @Override
+    public void setWorkStatus(boolean isruning) {
+        if(isruning){
+            if(workService != null){
+                workService.startWork();
+            }
+        }else {
+            if(workService != null){
+                stopTask(taskThread.getTasktype());
+                workService.stopWork();
+            }
         }
-        return model;
     }
 
     @Override
@@ -279,12 +312,8 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
     }
 
     private void openFragment(int position, boolean isOnclick) {
-        if (!isConn && (position == 2 || position == 1)) {
-            showMsg("没有连接到设备，请先连接设备");
-            return;
-        }
-        if(position == 2 && illegalRadioModelSet.size() <=0){
-            showMsg("可疑广播列表为空，不能进行分析");
+        if(position == 2 && mainIllegalRadioModelSet.size() <=0){
+            showMsg("可疑广播列表为空");
             return;
         }
         if (currentFragmentID == position && isOnclick) {
@@ -348,7 +377,7 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
                                     _Model.appeartime = DateTools.getCurrentDateString("yyyy-MM-dd HH:mm:ss");
                                     _Model.lat = 30.5843;
                                     _Model.lon = 104.0558;
-                                    if (illegalRadioModelSet.add(_Model)) {
+                                    if (mainIllegalRadioModelSet.add(_Model)) {
                                         EventBus.getDefault().post(new DrawMarkerEvent(_Model));
                                     }
                                 }

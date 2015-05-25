@@ -36,6 +36,7 @@ public class WorkService extends Service implements UDPServer.UDPCallBack{
     private boolean isStart = false;
     private UDPServer udpServer;
     private MyAudioTrack audioTrack;
+    private boolean isWorking = false;
 
     @Override
     public void onCreate() {
@@ -65,8 +66,9 @@ public class WorkService extends Service implements UDPServer.UDPCallBack{
         startWork();
     }
 
-    private void startWork() {
+    public void startWork() {
         Log.i(Attribute.TAG, "startwork");
+        isConn = false;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -74,11 +76,16 @@ public class WorkService extends Service implements UDPServer.UDPCallBack{
                     while (!isConn) {
                         EventBus.getDefault().post(new NetEvent(false));
                         isConn = device.connDevice();
+                        isWorking = true;
                         Thread.sleep(1000);
+                        Log.i(Attribute.TAG, "联机");
                     }
-                    startUDPServer();
-                    EventBus.getDefault().post(new NetEvent(true));
-                    sendCMD(Attribute.DELETEUDP);
+                    if(isWorking){
+                        Log.i(Attribute.TAG, "开始工作");
+                        startUDPServer();
+                        EventBus.getDefault().post(new NetEvent(true));
+                        sendCMD(Attribute.DELETEUDP);
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -87,6 +94,14 @@ public class WorkService extends Service implements UDPServer.UDPCallBack{
     }
     public void stopWork(){
         Log.i(Attribute.TAG, "//////////////////////////////" );
+        isConn = true;
+        isWorking = false;
+        if(device != null){
+            device.close();
+        }
+        if(udpServer!=null){
+            udpServer.close();
+        }
         isStart = false;
     }
     public boolean sendCMD(String pCMD){

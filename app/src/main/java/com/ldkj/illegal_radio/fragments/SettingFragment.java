@@ -28,10 +28,17 @@ public class SettingFragment extends FragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        stopSelfTask();
         View _view = inflater.inflate(R.layout.fragment_setting, container, false);
         initView(_view);
         addListener();
         return _view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        startNewTask();
+        super.onDestroyView();
     }
 
     private void initView(View view) {
@@ -42,8 +49,8 @@ public class SettingFragment extends FragmentBase {
     }
 
     private void addListener(){
-        dbBtn.setOnClickListener(listener);
-        deviceBtn.setOnClickListener(listener);
+        dbBtn.setOnClickListener(clickListener);
+        deviceBtn.setOnClickListener(clickListener);
     }
     private int currID = -1;
     private void showFragment(int id){
@@ -70,20 +77,23 @@ public class SettingFragment extends FragmentBase {
     }
     @Override
     protected void stopSelfTask() {
-
+        if(listener != null){
+            listener.setWorkStatus(false);
+        }
     }
-
     @Override
     protected void startNewTask() {
+        if(listener != null){
+            listener.setWorkStatus(true);
+        }
     }
-
     @Override
     public void updateData(float[] data) {
 
     }
 
 
-    private View.OnClickListener listener = new View.OnClickListener(){
+    private View.OnClickListener clickListener = new View.OnClickListener(){
         @Override
         public void onClick(View v) {
             if(v instanceof FloatingActionButton){

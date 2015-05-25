@@ -53,6 +53,9 @@ public class UDPServer implements Runnable {
     }
     public void close() {
         isStart = false;
+        if(socket != null)
+            socket.close();
+        socket = null;
     }
     private synchronized void dataAnalysis(byte[] data, int pDatalen) {
         if (datalen == 0) {

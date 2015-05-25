@@ -5,7 +5,7 @@ package com.ldkj.illegal_radio.models;
  */
 public class IllegalRadioModel  {
 
-    public long uid;
+    public long uid = -1;
     public int handle = 0;
     public String freq = "91.4MHz";  // 带单位
     public String appeartime;
