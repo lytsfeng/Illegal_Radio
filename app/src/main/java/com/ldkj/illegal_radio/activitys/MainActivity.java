@@ -20,7 +20,7 @@ import com.ldkj.illegal_radio.activitys.base.ActivityFrame;
 import com.ldkj.illegal_radio.events.DrawMarkerEvent;
 import com.ldkj.illegal_radio.events.NetEvent;
 import com.ldkj.illegal_radio.fragments.ScanFragment;
-import com.ldkj.illegal_radio.fragments.SingleFragment;
+import com.ldkj.illegal_radio.fragments.SingleFragment2;
 import com.ldkj.illegal_radio.fragments.base.FragmentBase;
 import com.ldkj.illegal_radio.fragments.base.MenuLeftFragment;
 import com.ldkj.illegal_radio.fragments.base.OnFragmentInteractionListener;
@@ -30,11 +30,14 @@ import com.ldkj.illegal_radio.services.LocationService;
 import com.ldkj.illegal_radio.services.WorkService;
 import com.ldkj.illegal_radio.utils.Attribute;
 import com.ldkj.illegal_radio.utils.DateTools;
+import com.ldkj.illegal_radio.utils.Utils;
 import com.ldkj.illegal_radio.utils.databases.base.SQLiteDALBase;
 import com.ldkj.illegal_radio.utils.databases.sqlitedal.SQLiteDALIllegalRadio;
 
+import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -70,6 +73,7 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
             workService = null;
         }
     };
+    private LatLng oldLatlng = null;
 
     public Set<IllegalRadioModel> getMainIllegalRadioModelSet() {
         return mainIllegalRadioModelSet;
@@ -111,7 +115,6 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
         mainIllegalRadioModelSet.addAll(_date);
     }
 
-
     @Override
     protected void onResume() {
         openFragment(currentFragmentID, false);
@@ -142,12 +145,16 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
     }
 
     // 事件接收
-    public void onupdate(float[] date,Attribute.DATATYPE datatype) {
+    public void onupdate(float[] data, Attribute.DATATYPE datatype) {
         synchronized (currentFragment) {
             try {
                 if (currentFragment != null) {
-                    if (currentFragment instanceof ScanFragment || currentFragment instanceof SingleFragment) {
-                        currentFragment.updateData(date,datatype);
+                    if (currentFragment instanceof ScanFragment) {
+                        currentFragment.updateData(data, datatype);
+                    }
+                    if(datatype == Attribute.DATATYPE.IQDATA){
+                        double _leve = Utils.calculateLevelfromIQ(data);
+                        EventBus.getDefault().post(getLevelAvg(_leve));
                     }
                 }
             } catch (Exception e) {
@@ -155,28 +162,55 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
             }
         }
     }
+    private Queue<Double> levels = new ArrayDeque<Double>();
+    private int avgCount = 1;
+    private double levelSum = 0;
+    private String getLevelAvg(double plevel) {
 
-    public void onEventMainThread(DrawMarkerEvent event){
+        if (levelSum == 0) {
+            levels.clear();
+        }
+        if (avgCount == 1) {
+            return String.format("%.0f", plevel);
+        }
+        double _avg = 0;
+        int _listSize = levels.size();
+        if (_listSize >= avgCount) {
+            double _tmp = levels.poll();
+            levelSum -= _tmp;
+            _listSize--;
+        }
+        levels.add(plevel);
+        levelSum += plevel;
+        _listSize += 1;
+        return String.format("%.0f", levelSum / _listSize);
+    }
+
+    public void onEventMainThread(Integer avgCount) {
+        this.avgCount =  avgCount;
+        levelSum = 0;
+    }
+    public void onEventMainThread(DrawMarkerEvent event) {
         IllegalRadioModel _mode = event.getRadioModel();
         currentFragment.updateIllegal(_mode, true);
         final String _freq = _mode.freq;
-       new Timer().schedule(new TimerTask() {
-           @Override
-           public void run() {
-               Single _Single = Single.setSingle(_freq);
-               stopTask(Attribute.TASKTYPE.SCAN);
-               startTask(Attribute.TASKTYPE.SINGLE);
-               setDemodulation(_Single.demodulationMode);
-               Timer t = new Timer();
-               t.schedule(new TimerTask() {
-                   @Override
-                   public void run() {
-                       stopTask(Attribute.TASKTYPE.SINGLE);
-                       startTask(Attribute.TASKTYPE.SCAN);
-                   }
-               }, 1 * 1000 * 60);
-           }
-       }, 5);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Single _Single = Single.setSingle(_freq);
+                stopTask(Attribute.TASKTYPE.SCAN);
+                startTask(Attribute.TASKTYPE.SINGLE);
+                setDemodulation(_Single.demodulationMode);
+                Timer t = new Timer();
+                t.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        stopTask(Attribute.TASKTYPE.SINGLE);
+                        startTask(Attribute.TASKTYPE.SCAN);
+                    }
+                }, 1 * 1000 * 60);
+            }
+        }, 5);
     }
 
     private void setDemodulation(String pValue) {
@@ -189,12 +223,9 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
         }
     }
 
-
     public void onEventMainThread(NetEvent netEvent) {
         isConn = netEvent.isConn();
     }
-
-    private LatLng oldLatlng = null;
 
     public void onEventMainThread(LatLng latLng) {
         oldLatlng = latLng;
@@ -234,24 +265,24 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
     @Override
     public IllegalRadioModel updateIllegal(IllegalRadioModel model, Attribute.OPERATION_TYPE pType) {
         IllegalRadioModel _Model1 = null;
-        switch (pType){
+        switch (pType) {
             case UPDATE:
-                if(illegalRadioModelSQLiteDALBase != null){
-                    illegalRadioModelSQLiteDALBase.Update("and uid = "+model.uid,model);
+                if (illegalRadioModelSQLiteDALBase != null) {
+                    illegalRadioModelSQLiteDALBase.Update("and uid = " + model.uid, model);
                     _Model1 = model;
                 }
                 break;
             case DELETE:
-                if(mainIllegalRadioModelSet.remove(model)){
-                    if(illegalRadioModelSQLiteDALBase != null){
+                if (mainIllegalRadioModelSet.remove(model)) {
+                    if (illegalRadioModelSQLiteDALBase != null) {
                         illegalRadioModelSQLiteDALBase.Delete("and uid =" + model.uid);
                     }
                     _Model1 = model;
                 }
                 break;
             case INSTER:
-                if(mainIllegalRadioModelSet.add(model)){
-                    if(illegalRadioModelSQLiteDALBase != null){
+                if (mainIllegalRadioModelSet.add(model)) {
+                    if (illegalRadioModelSQLiteDALBase != null) {
                         _Model1 = illegalRadioModelSQLiteDALBase.install(model);
                     }
                 }
@@ -264,13 +295,14 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
 
     @Override
     public void setWorkStatus(boolean isruning) {
-        if(isruning){
-            if(workService != null){
+        if (isruning) {
+            if (workService != null) {
                 workService.startWork();
             }
-        }else {
-            if(workService != null){
-                stopTask(taskThread.getTasktype());
+        } else {
+            if (workService != null) {
+                if (taskThread != null)
+                    stopTask(taskThread.getTasktype());
                 workService.stopWork();
             }
         }
@@ -312,7 +344,7 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
     }
 
     private void openFragment(int position, boolean isOnclick) {
-        if(position == 2 && mainIllegalRadioModelSet.size() <=0){
+        if (position == 2 && mainIllegalRadioModelSet.size() <= 0) {
             showMsg("可疑广播列表为空");
             return;
         }
@@ -331,7 +363,7 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
 
     public void startSingle(int index, Boolean isOpenFragment) {
         if (isOpenFragment) {
-            currentFragment = SingleFragment.newInstance(index);
+            currentFragment = SingleFragment2.newInstance(index);
             currentFragmentID = 2;
             showFreagment(R.id.main_fragment, currentFragment);
         } else {
@@ -340,6 +372,7 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
     }
 
     class TaskThread extends Thread {
+        int count = 0;
         private Attribute.TASKTYPE tasktype;
         private boolean isTaskRuning = false;
 
@@ -358,9 +391,9 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
         public void setTaskStatus(boolean isTaskRuning) {
             this.isTaskRuning = isTaskRuning;
         }
-        int count = 0;
-        private  void verification(float[] date){
-            if(date ==null)
+
+        private void verification(float[] date) {
+            if (date == null)
                 return;
             int _date = date.length;
 
@@ -370,7 +403,7 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
                         if (date[i] > date[i - 1] && date[i] > date[i + 1]) {
                             float _freq = (float) ((i) * 0.025 + 88.0);
                             if (Float.compare(_freq, (float) 101.7) == 0) {
-                                if(count > 100){
+                                if (count > 100) {
                                     IllegalRadioModel _Model = new IllegalRadioModel();
                                     _Model.freq = String.format("%.2fMHz", _freq);
                                     _Model.handle = 0;

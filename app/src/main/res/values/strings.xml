@@ -52,8 +52,8 @@
     <string name="illegal_info_freq">频率</string>
     <string name="illegal_info_status">状态</string>
     <string name="illegal_info_time">时间</string>
-    <string name="illegal_info_lon">纬度</string>
-    <string name="illegal_info_lat">经度</string>
+    <string name="illegal_info_lon">经度</string>
+    <string name="illegal_info_lat">纬度</string>
     <string name="illegal_info_address">地址</string>
     <string name="illegal_info_tag">说明</string>
     <string name="ok">确定</string>

@@ -5,7 +5,7 @@ import com.ldkj.illegal_radio.models.Scan;
 import com.ldkj.illegal_radio.models.Single;
 import com.ldkj.illegal_radio.utils.Attribute;
 import com.ldkj.illegal_radio.utils.CIOUtils;
-import com.ldkj.illegal_radio.utils.NetUtil;
+import com.ldkj.illegal_radio.utils.Net.NetUtil;
 import com.ldkj.illegal_radio.utils.Utils;
 import com.ldkj.illegal_radio.utils.devices.base.ADevice;
 

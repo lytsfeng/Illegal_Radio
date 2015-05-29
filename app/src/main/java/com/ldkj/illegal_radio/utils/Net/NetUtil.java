@@ -1,4 +1,4 @@
-package com.ldkj.illegal_radio.utils;
+package com.ldkj.illegal_radio.utils.Net;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

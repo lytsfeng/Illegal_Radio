@@ -47,7 +47,7 @@ public class SQLiteDALIllegalRadio extends SQLiteDALBase<IllegalRadioModel> {
     public boolean Update(String pCondition,IllegalRadioModel illegalRadioModel){
         ContentValues cv = new ContentValues();
         cv.put("[handle]",illegalRadioModel.handle);
-        cv.put("[freq]",illegalRadioModel.handle);
+        cv.put("[freq]",illegalRadioModel.freq);
         cv.put("[address]",illegalRadioModel.address);
         cv.put("[tag]",illegalRadioModel.tag);
         return GetDataBase().update(GetTableNameAndPK()[0],cv," 1=1 " + pCondition, null) >= 0;

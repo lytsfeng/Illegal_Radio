@@ -66,7 +66,23 @@
             android:layout_height="wrap_content"
             />
     </LinearLayout>
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            style="@style/StyleTableTitle"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="@string/illegal_info_lon"/>
+        <TextView
+            android:id="@+id/id_illegal_info_lon"
+            style="@style/StyleTableValue"
+            android:clickable="true"
+            android:text="91.4MHz"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -86,23 +102,7 @@
             />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            style="@style/StyleTableTitle"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:text="@string/illegal_info_lon"/>
-        <TextView
-            android:id="@+id/id_illegal_info_lon"
-            style="@style/StyleTableValue"
-            android:clickable="true"
-            android:text="91.4MHz"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            />
-    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"

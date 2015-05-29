@@ -1,0 +1,231 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/param_setting_padding_bottom"
+    android:paddingLeft="@dimen/param_setting_padding_left"
+    android:paddingRight="@dimen/param_setting_padding_right"
+    android:paddingTop="@dimen/param_setting_padding_top"
+    tools:context="com.ldkj.illegal_radio.fragments.SingleFragment2">
+
+    <Button
+        android:id="@+id/id_illegal_single_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+         />
+
+    <TableLayout
+        android:id="@+id/id_illegal_single_param"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/id_illegal_single_bottom">
+
+        <LinearLayout style="@style/StyleTable">
+            <TextView
+                style="@style/StyleTableTitle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="@string/center_freq" />
+            <TextView
+                android:id="@+id/id_illegal_single_center_freq"
+                style="@style/StyleTableValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:text="91.4MHz" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/StyleTable">
+
+            <TextView
+                style="@style/StyleTableTitle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="@string/attenuation_control" />
+
+            <TextView
+                android:id="@+id/id_illegal_single_att"
+                style="@style/StyleTableValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:text="0db" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            style="@style/StyleTable">
+
+            <TextView
+                style="@style/StyleTableTitle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="@string/level_avg"
+                />
+
+            <TextView
+                android:id="@+id/id_illegal_single_level_avg"
+                style="@style/StyleTableValue"
+                android:text="0"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                />
+
+        </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/id_illegal_single_sound"
+            style="@style/StyleTable"
+            android:layout_height="60dp"
+            android:layout_span="3"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/id_illegal_single_sound_mute"
+                style="@style/StyleTableValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/icon_checkbox_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:text="静音" />
+
+            <RadioButton
+                android:id="@+id/id_illegal_single_sound_voice"
+                style="@style/StyleTableValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/icon_checkbox_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:text="语音" />
+
+            <RadioButton
+                android:id="@+id/id_illegal_single_sound_device"
+                style="@style/StyleTableValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/icon_checkbox_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:text="接收机" />
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/id_illegal_single_work"
+            style="@style/StyleTable"
+            android:layout_height="60dp"
+            android:layout_span="3"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/id_illegal_single_work_usually"
+                style="@style/StyleTableValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/icon_checkbox_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:text="普通查找" />
+            <RadioButton
+                android:id="@+id/id_illegal_single_work_floor"
+                style="@style/StyleTableValue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/icon_checkbox_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:text="楼内查找" />
+        </RadioGroup>
+    </TableLayout>
+
+
+    <LinearLayout
+        android:id="@+id/id_illegal_single_floor_control"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:layout_above="@id/id_illegal_single_param"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical"
+        >
+        <Button
+            android:id="@+id/id_illegal_single_floor_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="+"/>
+        <EditText
+            android:id="@+id/id_illegal_single_floor_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/StyleTable"
+            android:text="1"
+            android:textSize="35sp"
+            android:gravity="center"
+            android:layout_weight="3"
+            />
+        <Button
+            android:id="@+id/id_illegal_single_floor_sub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="-"/>
+    </LinearLayout>
+
+
+
+    <TextView
+        android:id="@+id/id_illegal_single_lever"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/id_illegal_single_floor_control"
+        android:layout_above="@id/id_illegal_single_param"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:textSize="50sp"
+        style="@style/StyleTable"
+        android:text="56"/>
+
+    <TextView
+        android:id="@+id/id_illegal_single_level_min"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/id_illegal_single_lever"
+        android:layout_above="@id/id_illegal_single_param"
+        style="@style/StyleTable"
+        android:text="最小值"/>
+    <TextView
+        android:id="@+id/id_illegal_single_level_max"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/id_illegal_single_lever"
+        android:layout_above="@id/id_illegal_single_level_min"
+        style="@style/StyleTable"
+        android:text="最大值"/>
+    <!--<TextView-->
+        <!--android:id="@+id/id_illegal_current_floor"-->
+        <!--android:layout_width="100dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_toLeftOf="@id/id_illegal_single_floor_control"-->
+        <!--android:layout_above="@id/id_illegal_max"-->
+        <!--style="@style/StyleTable"-->
+        <!--android:text="当前楼层"/>-->
+
+
+
+</RelativeLayout>

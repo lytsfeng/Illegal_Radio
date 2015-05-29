@@ -12,7 +12,7 @@ import com.ldkj.illegal_radio.events.SetParamEvent;
 import com.ldkj.illegal_radio.models.DeviceConfig;
 import com.ldkj.illegal_radio.utils.Attribute;
 import com.ldkj.illegal_radio.utils.DataConversion;
-import com.ldkj.illegal_radio.utils.MyAudioTrack;
+import com.ldkj.illegal_radio.utils.audios.MyAudioTrack;
 import com.ldkj.illegal_radio.utils.Net.UDPServer;
 import com.ldkj.illegal_radio.utils.devices.DeviceFactory;
 import com.ldkj.illegal_radio.utils.devices.base.IDevice;
@@ -132,8 +132,6 @@ public class WorkService extends Service implements UDPServer.UDPCallBack{
         }
         return _date;
     }
-
-
     public boolean startTask(Attribute.TASKTYPE tasktype){
         boolean _success = false;
         if(device != null){
@@ -151,8 +149,6 @@ public class WorkService extends Service implements UDPServer.UDPCallBack{
         return _success;
     }
 
-
-
     private void startUDPServer() {
         if (udpServer == null){
             try {
@@ -169,7 +165,6 @@ public class WorkService extends Service implements UDPServer.UDPCallBack{
 
     @Override
     public void onDestroy() {
-
         super.onDestroy();
     }
 
@@ -217,6 +212,7 @@ public class WorkService extends Service implements UDPServer.UDPCallBack{
         }
         byte[] radio = new byte[count];
         ioBuffer.get(radio);
+
         audioTrack.playAudioTrack(radio, 0, count);
     }
     private boolean isSound =  true;
@@ -234,6 +230,11 @@ public class WorkService extends Service implements UDPServer.UDPCallBack{
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public void startReco(){
+
     }
 
 }

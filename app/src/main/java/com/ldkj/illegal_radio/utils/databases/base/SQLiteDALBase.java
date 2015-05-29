@@ -4,8 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.ldkj.illegal_radio.models.IllegalRadioModel;
-
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +78,6 @@ public abstract class SQLiteDALBase<T> implements SQLiteHelper.SQLiteDataTable{
 
     protected abstract T FindModel(Cursor pCursor);
     protected abstract String[] GetTableNameAndPK();
-    public abstract boolean Update(String pCondition,IllegalRadioModel illegalRadioModel);
+    public abstract boolean Update(String pCondition,T pT);
 
 }

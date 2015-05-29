@@ -77,13 +77,13 @@
         <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#ff000000</item>
-        <item name="android:background">@drawable/number_selector</item>
+        <item name="android:background">@drawable/imagebutton_selector</item>
     </style>
 
 
 
     <style name="StyleTable">
-        <item name="android:layout_margin">0.5dp</item>
+        <item name="android:layout_margin">1dp</item>
         <item name="android:background">@drawable/table_frame_gray</item>
     </style>
     <style name="StyleTableTitle">
@@ -109,4 +109,7 @@
         <item name="android:gravity">center</item>
         <item name="android:textStyle">normal</item>
     </style>
+
+
+
 </resources>
