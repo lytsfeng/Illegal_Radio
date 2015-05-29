@@ -21,12 +21,24 @@ public class SQLiteDALRadio extends SQLiteDALBase<RadioModels> {
 
     @Override
     protected RadioModels FindModel(Cursor pCursor) {
-        return null;
+        RadioModels _Models = new RadioModels();
+        _Models.id = pCursor.getInt(pCursor.getColumnIndex("id"));
+        _Models.name = pCursor.getString(pCursor.getColumnIndex("name"));
+        _Models.freq = pCursor.getLong(pCursor.getColumnIndex("freq"));
+        _Models.span = pCursor.getInt(pCursor.getColumnIndex("span"));
+        _Models.lon = pCursor.getDouble(pCursor.getColumnIndex("lon"));
+        _Models.lat = pCursor.getDouble(pCursor.getColumnIndex("lat"));
+        _Models.address = pCursor.getString(pCursor.getColumnIndex("address"));
+        _Models.power = pCursor.getInt(pCursor.getColumnIndex("power"));
+        _Models.tag = pCursor.getString(pCursor.getColumnIndex("tag"));
+        _Models.beginTime = pCursor.getString(pCursor.getColumnIndex("begintime"));
+        _Models.engTime = pCursor.getString(pCursor.getColumnIndex("endtime"));
+        return _Models;
     }
 
     @Override
     protected String[] GetTableNameAndPK() {
-        return new String[0];
+        return new String[]{"radio","id"};
     }
 
     @Override
@@ -38,7 +50,18 @@ public class SQLiteDALRadio extends SQLiteDALBase<RadioModels> {
     @Override
     public void OnCreate(SQLiteDatabase p_DataBase) {
         String _SqlText = "create table radio(" +
-                "id";
+                "[id] integer primary key autoincrement not null," +
+                "[name] text not null," +
+                "[freq] long not null," +
+                "[span] long not null," +
+                "[lon] real not null," +
+                "[lat] real not null," +
+                "[address] text not null" +
+                "[power] integer not null" +
+                "[begintime] datetime not null," +
+                "[endtime] datetime not null," +
+                "[tag] text);";
+        p_DataBase.execSQL(_SqlText);
     }
 
     @Override
