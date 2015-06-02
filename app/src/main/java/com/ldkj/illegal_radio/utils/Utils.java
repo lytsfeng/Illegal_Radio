@@ -2,9 +2,12 @@ package com.ldkj.illegal_radio.utils;
 
 import com.ldkj.illegal_radio.OwnApplication;
 import com.ldkj.illegal_radio.R;
+import com.ldkj.illegal_radio.models.IllegalRadioModel;
 
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -160,4 +163,40 @@ public class Utils {
     }
 
 
+    public static Boolean isExit(String pFilePath){
+        File file = new File(pFilePath);
+        return file.exists();
+    }
+
+    public static String getSoundFileName(IllegalRadioModel model,Boolean isUnit){
+        String _SoundFileName = "";
+
+        String _time = model.appeartime.replaceAll(":","-");
+
+        if(isUnit){
+            _SoundFileName = MessageFormat.format("{0}{1}-{2}.wav",Attribute.FOLDER_PATH_SOUND,model.freq,_time);
+       }else
+        {
+            _SoundFileName = MessageFormat.format("{0}{1}-{2}",Attribute.FOLDER_PATH_SOUND,model.freq,_time);
+        }
+
+               return _SoundFileName;
+    }
+
+
+    /**
+     * 根据传入的文件夹路径 创建文件夹，并返回当前文件夹得路径
+     *
+     * @param pFolderPath 文件夹得路径
+     * @return 文件夹得路径
+     * @author 张亚峰
+     */
+    public static String onCreateFolder(String pFolderPath) {
+        File _file = new File(pFolderPath);
+        boolean _flag = true;
+        if (!_file.exists()) {
+            _flag = _file.mkdir();
+        }
+        return _file.getPath();
+    }
 }

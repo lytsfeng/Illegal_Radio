@@ -4,19 +4,27 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.ldkj.illegal_radio.activitys.MainActivity;
 import com.ldkj.illegal_radio.events.NetEvent;
 import com.ldkj.illegal_radio.events.SetParamEvent;
 import com.ldkj.illegal_radio.models.DeviceConfig;
+import com.ldkj.illegal_radio.models.IllegalRadioModel;
 import com.ldkj.illegal_radio.utils.Attribute;
 import com.ldkj.illegal_radio.utils.DataConversion;
-import com.ldkj.illegal_radio.utils.audios.MyAudioTrack;
 import com.ldkj.illegal_radio.utils.Net.UDPServer;
+import com.ldkj.illegal_radio.utils.Utils;
+import com.ldkj.illegal_radio.utils.audios.MyAudioTrack;
+import com.ldkj.illegal_radio.utils.audios.WriteWaveFileThread;
 import com.ldkj.illegal_radio.utils.devices.DeviceFactory;
 import com.ldkj.illegal_radio.utils.devices.base.IDevice;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
@@ -37,6 +45,9 @@ public class WorkService extends Service implements UDPServer.UDPCallBack{
     private UDPServer udpServer;
     private MyAudioTrack audioTrack;
     private boolean isWorking = false;
+    private FileOutputStream bos = null;
+    private boolean isReco = false;
+
 
     @Override
     public void onCreate() {
@@ -213,12 +224,23 @@ public class WorkService extends Service implements UDPServer.UDPCallBack{
         byte[] radio = new byte[count];
         ioBuffer.get(radio);
 
+        if(isReco){
+            synchronized (bos){
+                if (bos != null){
+                    try {
+                        bos.write(radio);
+                        bos.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }
         audioTrack.playAudioTrack(radio, 0, count);
     }
     private boolean isSound =  true;
-    public void setSound(boolean isSound) {
-        this.isSound = isSound;
-    }
+
 
     protected void soundDataAnalysis(Object obj) {
         byte[] _b = (byte[]) obj;
@@ -231,10 +253,37 @@ public class WorkService extends Service implements UDPServer.UDPCallBack{
             e.printStackTrace();
         }
     }
-
-
-    public void startReco(){
-
+    private String soundFile = "";
+    public void startReco( IllegalRadioModel model) {
+        soundFile = Utils.getSoundFileName(model, false);
+        if (!TextUtils.isEmpty(soundFile)) {
+            File _file = new File(soundFile);
+            if (_file.exists()) {
+                _file.delete();
+            }
+            try {
+                bos = new FileOutputStream(_file);
+                isReco = true;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void stopReco(){
+        isReco = false;
+        synchronized (bos){
+            try {
+                bos.flush();
+                bos.close();
+                bos = null;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+       new Thread( new WriteWaveFileThread(soundFile)).start();
+    }
+    public void setSound(boolean isSound) {
+        this.isSound = isSound;
     }
 
 }

@@ -10,10 +10,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ldkj.illegal_radio.R;
+import com.ldkj.illegal_radio.activitys.MainActivity;
+import com.ldkj.illegal_radio.models.IllegalRadioModel;
 import com.ldkj.illegal_radio.views.adapters.base.AdapterBase;
 import com.ldkj.illegal_radio.views.dialogs.base.DialogBase;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Created by john on 15-3-10.
@@ -21,8 +24,6 @@ import java.util.ArrayList;
 public class NumberDialog extends DialogBase implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private static final int LISTMAXCOUT = 5;
-    private static final String NAME = "number_config";
-    private static final String KEY = "key";
 
     private Context context;
     private int resId;
@@ -42,10 +43,7 @@ public class NumberDialog extends DialogBase implements View.OnClickListener, Ad
         this.resId = resId;
         this.callBack = callBack;
         setContentView(R.layout.dialog_number);
-
-        preferences = context.getSharedPreferences(NAME, Context.MODE_APPEND);
         dataList = getDataList();
-
         lvTmpFreq = (ListView) findViewById(R.id.id_lv_number_tmp_freq);
         if (dataList.size() <= 0) {
             lvTmpFreq.setVisibility(View.GONE);
@@ -62,50 +60,22 @@ public class NumberDialog extends DialogBase implements View.OnClickListener, Ad
 
     }
 
-    private void addList(String pValue) {
-        boolean isflag = false;
-        for (String s : dataList) {
-            if (pValue.equalsIgnoreCase(s)) {
-                isflag = true;
-            }
-        }
-        if (!isflag) {
-            if (dataList.size() >= LISTMAXCOUT) {
-                dataList.remove(0);
-                dataList.add(pValue);
-            } else {
-                dataList.add(pValue);
-            }
-            setDataList();
-        }
-    }
 
     private ArrayList<String> getDataList() {
-        String _value = preferences.getString(KEY, null);
-        if (_value != null) {
-            String[] _Values = _value.split(",");
-            int _count = _Values.length;
-            for (int i = 0; i < _count; i++) {
-                dataList.add(_Values[i]);
+        if(context instanceof  MainActivity){
+            Set<IllegalRadioModel> _value = ((MainActivity)context).getMainIllegalRadioModelSet();
+            for (IllegalRadioModel model: _value) {
+                dataList.add(model.freq);
             }
         }
         return dataList;
     }
 
-    private void setDataList() {
-        int _coud = dataList.size();
-        String _value = "";
-        for (int i = 0; i < _coud; i++) {
-            _value += dataList.get(i) + ",";
-        }
-        preferences.edit().putString(KEY, _value).commit();
-    }
 
     private void onOk(String pValue, String pUnit) {
         int i = pValue.indexOf(".");
         if (!pValue.equals(".") && pValue.length() != 0 && pValue.indexOf(".") != (pValue.length() - 1)) {
             pValue += pUnit;
-            addList(pValue);
         } else {
             pValue = null;
         }

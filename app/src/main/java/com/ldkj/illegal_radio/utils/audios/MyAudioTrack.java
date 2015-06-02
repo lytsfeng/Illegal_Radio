@@ -5,8 +5,6 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import android.util.Log;
 
-import java.io.BufferedOutputStream;
-
 /**
  * Created by john on 15-2-13.
  */
@@ -16,7 +14,7 @@ public class MyAudioTrack {
     private int mChannel;                                        // 声道
     private int mSampBit;                                        // 采样精度
     private AudioTrack mAudioTrack;
-    BufferedOutputStream bos;
+
     public MyAudioTrack(int frequency, int channel, int sampbit) {
         this.mFrequency = frequency;
         this.mChannel = channel;
@@ -71,8 +69,7 @@ public class MyAudioTrack {
 
         try {
             mAudioTrack.write(data, offset, length);
-            bos.write(data);
-            bos.flush();
+
         } catch (Exception e) {
             // TODO: handle exception
             Log.i("MyAudioTrack", "catch exception...");

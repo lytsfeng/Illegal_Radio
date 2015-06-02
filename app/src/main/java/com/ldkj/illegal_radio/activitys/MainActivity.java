@@ -7,18 +7,22 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.amap.api.maps.model.LatLng;
 import com.ldkj.illegal_radio.R;
 import com.ldkj.illegal_radio.activitys.base.ActivityFrame;
 import com.ldkj.illegal_radio.events.DrawMarkerEvent;
 import com.ldkj.illegal_radio.events.NetEvent;
+import com.ldkj.illegal_radio.events.ThresholdEvent;
 import com.ldkj.illegal_radio.fragments.ScanFragment;
 import com.ldkj.illegal_radio.fragments.SingleFragment2;
 import com.ldkj.illegal_radio.fragments.base.FragmentBase;
@@ -33,10 +37,12 @@ import com.ldkj.illegal_radio.utils.DateTools;
 import com.ldkj.illegal_radio.utils.Utils;
 import com.ldkj.illegal_radio.utils.databases.base.SQLiteDALBase;
 import com.ldkj.illegal_radio.utils.databases.sqlitedal.SQLiteDALIllegalRadio;
+import com.ldkj.illegal_radio.views.dialogs.DownLoadAndInstallApkDialog;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Timer;
@@ -44,9 +50,10 @@ import java.util.TimerTask;
 
 import de.greenrobot.event.EventBus;
 
-public class MainActivity extends ActivityFrame implements OnFragmentInteractionListener, MenuLeftFragment.MenuOnItemClickListener {
+public class MainActivity extends ActivityFrame implements OnFragmentInteractionListener, MenuLeftFragment.MenuOnItemClickListener, TextToSpeech.OnInitListener {
 
     private static final String CONFIG_KEY_FRAGMENT = "fragment";
+    protected TextToSpeech speech;
     private int currentFragmentID = 0;
     private FragmentBase currentFragment = null;
     private WorkService workService;
@@ -61,6 +68,10 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
     private int threshold = 30;
     private boolean isTaskRuning = false;
     private Attribute.TASKTYPE tasktype = Attribute.TASKTYPE.NO;
+    private Attribute.SOUNDTYPE soundtype = Attribute.SOUNDTYPE.DEVICE;
+
+
+
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -74,6 +85,10 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
         }
     };
     private LatLng oldLatlng = null;
+    private Queue<Double> levels = new ArrayDeque<Double>();
+    private int avgCount = 1;
+    private double levelSum = 0;
+    private Timer singleTimer = null;
 
     public Set<IllegalRadioModel> getMainIllegalRadioModelSet() {
         return mainIllegalRadioModelSet;
@@ -107,6 +122,7 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
         illegalRadioModelSQLiteDALBase = new SQLiteDALIllegalRadio(this);
+        startTTS();
     }
 
     private void bindData() {
@@ -152,7 +168,7 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
                     if (currentFragment instanceof ScanFragment) {
                         currentFragment.updateData(data, datatype);
                     }
-                    if(datatype == Attribute.DATATYPE.IQDATA){
+                    if (datatype == Attribute.DATATYPE.IQDATA) {
                         double _leve = Utils.calculateLevelfromIQ(data);
                         EventBus.getDefault().post(getLevelAvg(_leve));
                     }
@@ -162,9 +178,15 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
             }
         }
     }
-    private Queue<Double> levels = new ArrayDeque<Double>();
-    private int avgCount = 1;
-    private double levelSum = 0;
+
+    public void onEventMainThread(String _leve) {
+        if (speech != null && !speech.isSpeaking() && soundtype == Attribute.SOUNDTYPE.VOICE) {
+            speech.setPitch(1f);// 设置音调，值越大声音越尖（女生），值越小则变成男声,1.0是常规
+            speech.speak(_leve,
+                    TextToSpeech.QUEUE_FLUSH, null);
+        }
+    }
+
     private String getLevelAvg(double plevel) {
 
         if (levelSum == 0) {
@@ -187,14 +209,22 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
     }
 
     public void onEventMainThread(Integer avgCount) {
-        this.avgCount =  avgCount;
+        this.avgCount = avgCount;
         levelSum = 0;
     }
+
     public void onEventMainThread(DrawMarkerEvent event) {
-        IllegalRadioModel _mode = event.getRadioModel();
+        IllegalRadioModel _mode = updateIllegal(event.getRadioModel(), Attribute.OPERATION_TYPE.INSTER);
+        if (_mode == null) {
+            return;
+        }
         currentFragment.updateIllegal(_mode, true);
         final String _freq = _mode.freq;
-        new Timer().schedule(new TimerTask() {
+        if (workService != null) {
+            workService.startReco(_mode);
+        }
+        singleTimer = new Timer();
+        singleTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 Single _Single = Single.setSingle(_freq);
@@ -207,6 +237,9 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
                     public void run() {
                         stopTask(Attribute.TASKTYPE.SINGLE);
                         startTask(Attribute.TASKTYPE.SCAN);
+                        if (workService != null) {
+                            workService.stopReco();
+                        }
                     }
                 }, 1 * 1000 * 60);
             }
@@ -231,9 +264,8 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
         oldLatlng = latLng;
     }
 
-    @Override
-    public void updateThreshold(int threshold) {
-        this.threshold = threshold;
+    public void onEventMainThread(ThresholdEvent threshold) {
+        this.threshold = threshold.getThreshold();
     }
 
     @Override
@@ -309,6 +341,14 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
     }
 
     @Override
+    public Attribute.TASKTYPE getTaskType() {
+        if (taskThread != null) {
+            return taskThread.getTasktype();
+        }
+        return Attribute.TASKTYPE.NO;
+    }
+
+    @Override
     public boolean startTask(Attribute.TASKTYPE tasktype) {
         if (taskThread != null) {
             if (tasktype == taskThread.getTasktype()) {
@@ -371,6 +411,42 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            int result = speech.setLanguage(Locale.CHINA);
+            if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                DownLoadAndInstallApkDialog dialog = new DownLoadAndInstallApkDialog(this);
+                dialog.setCallback(new DownLoadAndInstallApkDialog.DialogCallback() {
+
+                    @Override
+                    public void doCancel(boolean isCancel) {
+                        if (isCancel) {
+                            if (speech != null) {
+                                speech.shutdown();
+                                speech = null;
+                                Toast.makeText(getApplication(), R.string.error, Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+                });
+                dialog.show();
+            }
+        }
+    }
+
+    protected void startTTS() {
+        if (speech == null) {
+            speech = new TextToSpeech(this, this);
+        }
+    }
+
     class TaskThread extends Thread {
         int count = 0;
         private Attribute.TASKTYPE tasktype;
@@ -409,10 +485,8 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
                                     _Model.handle = 0;
                                     _Model.appeartime = DateTools.getCurrentDateString("yyyy-MM-dd HH:mm:ss");
                                     _Model.lat = 30.5843;
-                                    _Model.lon = 104.0558;
-                                    if (mainIllegalRadioModelSet.add(_Model)) {
-                                        EventBus.getDefault().post(new DrawMarkerEvent(_Model));
-                                    }
+                                    _Model.lon = (104.0558);
+                                    EventBus.getDefault().post(new DrawMarkerEvent(_Model));
                                 }
                                 count++;
                             }
@@ -445,9 +519,23 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
                         isTaskRuning = false;
                         break;
                 }
-
             }
 
+        }
+    }
+    public Attribute.SOUNDTYPE getSoundtype() {
+        return soundtype;
+    }
+    public void onEventMainThread(Attribute.SOUNDTYPE soundtype){
+        this.soundtype = soundtype;
+        if(soundtype == Attribute.SOUNDTYPE.DEVICE){
+            if(workService != null){
+                workService.setSound(true);
+            }
+        }else {
+            if(workService != null){
+                workService.setSound(false);
+            }
         }
     }
 

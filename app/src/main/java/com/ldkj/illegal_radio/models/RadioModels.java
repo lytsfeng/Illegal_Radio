@@ -14,9 +14,9 @@ public class RadioModels {
     public String beginTime;
     public String engTime;
     public int power;
-
-
     public String tag;
+
+
 
 
 }

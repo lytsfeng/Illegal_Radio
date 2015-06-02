@@ -7,7 +7,6 @@ import com.ldkj.illegal_radio.utils.Attribute;
  * Created by john on 15-4-10.
  */
 public interface OnFragmentInteractionListener {
-    void updateThreshold(int att);
     boolean setCommand(String pCommand);
     float[] getMeasureValue(Attribute.DATATYPE datatype);
     boolean startTask(Attribute.TASKTYPE tasktype);
@@ -15,6 +14,7 @@ public interface OnFragmentInteractionListener {
     IllegalRadioModel updateIllegal(IllegalRadioModel model,Attribute.OPERATION_TYPE pType);
 
     void setWorkStatus(boolean running);
+    Attribute.TASKTYPE  getTaskType();
 
 
 }

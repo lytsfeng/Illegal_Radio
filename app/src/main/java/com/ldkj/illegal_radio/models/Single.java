@@ -19,16 +19,13 @@ public class Single {
     private static final String ATTCONTROL = "attcontrol";           //衰减控制
     private static final String DEMODULATIONMODE = "demodulationMode";     //解调模式
     private static final String SOUND = "sound";
-
-
-
+    private static final String LEVELAVG = "levelAvg";
     public String centFreq = "91.4MHz";    //中心频率
     public String freqBandWidth = "250KHz";        //频谱带宽
     public String filterBandwidth = "50KHz";      //滤波带宽
-    public String attcontrol = "10dB";           //衰减控制
+    public String attcontrol = "0dB";           //衰减控制
     public String demodulationMode = "FM";     //解调模式
-
-
+    public String levelAvg = "实时";
     public  static  Single getSingle(){
         Single _Single = new Single();
         SharedPreferences _Preferences = OwnApplication.getContext().getSharedPreferences(NAME, Context.MODE_APPEND);
@@ -37,6 +34,7 @@ public class Single {
         _Single.filterBandwidth = _Preferences.getString(FILTERBANDWIDTH, _Single.filterBandwidth);
         _Single.attcontrol = _Preferences.getString(ATTCONTROL, _Single.attcontrol);
         _Single.demodulationMode = _Preferences.getString(DEMODULATIONMODE,_Single.demodulationMode);
+        _Single.levelAvg = _Preferences.getString(LEVELAVG, _Single.levelAvg);
         return _Single;
     }
     public static void setSingle(Single pSingle){
@@ -47,17 +45,14 @@ public class Single {
         _Editor.putString(FREQBANDWIDTH, pSingle.freqBandWidth);
         _Editor.putString(ATTCONTROL, pSingle.attcontrol);
         _Editor.putString(DEMODULATIONMODE, pSingle.demodulationMode);
+        _Editor.putString(LEVELAVG, pSingle.levelAvg);
         _Editor.commit();
     }
-
     public static Single setSingle(String pFreq){
         Single _Single = getSingle();
         _Single.centFreq = pFreq;
         setSingle(_Single);
         return  _Single;
     }
-
-
-
 
 }

@@ -26,7 +26,7 @@
     <dimen name="param_setting_padding_top">5dp</dimen>
     <dimen name="param_setting_padding_left">5dp</dimen>
     <dimen name="param_setting_padding_right">5dp</dimen>
-    <dimen name="param_setting_padding_bottom">0dp</dimen>
+    <dimen name="param_setting_padding_bottom">5dp</dimen>
 
 
 </resources>

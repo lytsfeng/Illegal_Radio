@@ -26,8 +26,8 @@ public class SQLiteDALRadio extends SQLiteDALBase<RadioModels> {
         _Models.name = pCursor.getString(pCursor.getColumnIndex("name"));
         _Models.freq = pCursor.getLong(pCursor.getColumnIndex("freq"));
         _Models.span = pCursor.getInt(pCursor.getColumnIndex("span"));
-        _Models.lon = pCursor.getDouble(pCursor.getColumnIndex("lon"));
-        _Models.lat = pCursor.getDouble(pCursor.getColumnIndex("lat"));
+        _Models.lon = (pCursor.getDouble(pCursor.getColumnIndex("lon")));
+        _Models.lat = (pCursor.getDouble(pCursor.getColumnIndex("lat")));
         _Models.address = pCursor.getString(pCursor.getColumnIndex("address"));
         _Models.power = pCursor.getInt(pCursor.getColumnIndex("power"));
         _Models.tag = pCursor.getString(pCursor.getColumnIndex("tag"));
@@ -54,14 +54,19 @@ public class SQLiteDALRadio extends SQLiteDALBase<RadioModels> {
                 "[name] text not null," +
                 "[freq] long not null," +
                 "[span] long not null," +
-                "[lon] real not null," +
-                "[lat] real not null," +
-                "[address] text not null" +
-                "[power] integer not null" +
+                "[lon] double not null," +
+                "[lat] double not null," +
+                "[address] text not null," +
+                "[power] integer not null," +
                 "[begintime] datetime not null," +
                 "[endtime] datetime not null," +
                 "[tag] text);";
-        p_DataBase.execSQL(_SqlText);
+        try{
+            p_DataBase.execSQL(_SqlText);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override

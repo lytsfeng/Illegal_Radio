@@ -182,8 +182,8 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
      * @return
      */
     private LatLng getLastLatlon() {
-        String _Lat = sharedPreferences.getString(LocationService.KEY_LATITUDE, "30.67").trim();
-        String _lon = sharedPreferences.getString(LocationService.KEY_LONGITUDE, "104.06").trim();
+        String _Lat = sharedPreferences.getString(LocationService.KEY_LATITUDE, "30.5861").trim();
+        String _lon = sharedPreferences.getString(LocationService.KEY_LONGITUDE, "104.0552").trim();
         LatLng _latLng = new LatLng(Double.parseDouble(_Lat), Double.parseDouble(_lon));
         return _latLng;
     }
@@ -250,8 +250,8 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
     @Override
     public void onMapLongClick(LatLng latLng) {
         IllegalRadioModel _Model = new IllegalRadioModel();
-        _Model.lat = latLng.latitude;
-        _Model.lon = latLng.longitude;
+        _Model.lat = (latLng.latitude);
+        _Model.lon = ( latLng.longitude);
         _Model.appeartime = DateTools.getCurrentDateString("yyyy-MM-dd HH:mm:ss");
         new IllegalInfoDialog(getActivity(), _Model, this).show();
 

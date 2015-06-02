@@ -8,14 +8,16 @@
     android:paddingRight="@dimen/param_setting_padding_right"
     android:paddingTop="@dimen/param_setting_padding_top"
     tools:context="com.ldkj.illegal_radio.fragments.SingleFragment2">
-
     <Button
         android:id="@+id/id_illegal_single_bottom"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        style="@style/StyleTableValue"
+        android:layout_height="60dp"
+        android:layout_margin="1dp"
         android:layout_alignParentBottom="true"
-         />
-
+        android:background="@drawable/imagebutton_selector"
+        android:textSize="30sp"
+        android:text="@string/task_single_on"/>
     <TableLayout
         android:id="@+id/id_illegal_single_param"
         android:layout_width="match_parent"
@@ -61,7 +63,6 @@
 
         <LinearLayout
             style="@style/StyleTable">
-
             <TextView
                 style="@style/StyleTableTitle"
                 android:layout_width="match_parent"
@@ -69,7 +70,6 @@
                 android:layout_weight="2"
                 android:text="@string/level_avg"
                 />
-
             <TextView
                 android:id="@+id/id_illegal_single_level_avg"
                 style="@style/StyleTableValue"
@@ -79,9 +79,7 @@
                 android:layout_weight="1"
                 android:clickable="true"
                 />
-
         </LinearLayout>
-
         <RadioGroup
             android:id="@+id/id_illegal_single_sound"
             style="@style/StyleTable"
@@ -89,7 +87,6 @@
             android:layout_span="3"
             android:layout_weight="1"
             android:orientation="horizontal">
-
             <RadioButton
                 android:id="@+id/id_illegal_single_sound_mute"
                 style="@style/StyleTableValue"
@@ -100,7 +97,6 @@
                 android:button="@null"
                 android:gravity="center"
                 android:text="静音" />
-
             <RadioButton
                 android:id="@+id/id_illegal_single_sound_voice"
                 style="@style/StyleTableValue"
@@ -111,7 +107,6 @@
                 android:button="@null"
                 android:gravity="center"
                 android:text="语音" />
-
             <RadioButton
                 android:id="@+id/id_illegal_single_sound_device"
                 style="@style/StyleTableValue"
@@ -165,15 +160,18 @@
         >
         <Button
             android:id="@+id/id_illegal_single_floor_add"
+            style="@style/StyleTableValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/imagebutton_selector"
+            android:textSize="35sp"
             android:text="+"/>
         <EditText
             android:id="@+id/id_illegal_single_floor_value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/StyleTable"
+            style="@style/StyleTableValue"
             android:text="1"
             android:textSize="35sp"
             android:gravity="center"
@@ -181,9 +179,12 @@
             />
         <Button
             android:id="@+id/id_illegal_single_floor_sub"
+            style="@style/StyleTableValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/imagebutton_selector"
             android:layout_weight="1"
+            android:textSize="35sp"
             android:text="-"/>
     </LinearLayout>
 
@@ -197,9 +198,10 @@
         android:layout_above="@id/id_illegal_single_param"
         android:layout_alignParentTop="true"
         android:gravity="center"
-        android:textSize="50sp"
+        android:textSize="70sp"
+        android:textColor="#00ff00"
         style="@style/StyleTable"
-        android:text="56"/>
+        />
 
     <TextView
         android:id="@+id/id_illegal_single_level_min"
@@ -208,6 +210,7 @@
         android:layout_alignEnd="@id/id_illegal_single_lever"
         android:layout_above="@id/id_illegal_single_param"
         style="@style/StyleTable"
+        android:gravity="center"
         android:text="最小值"/>
     <TextView
         android:id="@+id/id_illegal_single_level_max"
@@ -216,16 +219,6 @@
         android:layout_alignEnd="@id/id_illegal_single_lever"
         android:layout_above="@id/id_illegal_single_level_min"
         style="@style/StyleTable"
+        android:gravity="center"
         android:text="最大值"/>
-    <!--<TextView-->
-        <!--android:id="@+id/id_illegal_current_floor"-->
-        <!--android:layout_width="100dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_toLeftOf="@id/id_illegal_single_floor_control"-->
-        <!--android:layout_above="@id/id_illegal_max"-->
-        <!--style="@style/StyleTable"-->
-        <!--android:text="当前楼层"/>-->
-
-
-
 </RelativeLayout>

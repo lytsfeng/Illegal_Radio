@@ -1,18 +1,30 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="300dp"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/param_setting_padding_top"
-    android:paddingRight="@dimen/param_setting_padding_right"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/param_setting_padding_bottom"
     android:paddingLeft="@dimen/param_setting_padding_left"
-    android:paddingBottom="@dimen/param_setting_padding_bottom">
-
-
-
+    android:paddingRight="@dimen/param_setting_padding_right"
+    android:paddingTop="@dimen/param_setting_padding_top"
+    >
+    <CheckBox
+        android:id="@+id/id_dialog_sound"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:button="@null"
+        android:background="@drawable/sound_selector"
+        style="@style/StyleTable"/>
     <LinearLayout
+        android:id="@+id/id_dialog_param_freq"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        style="@style/StyleTable"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@id/id_dialog_sound"
+        >
         <TextView
             style="@style/StyleTableTitle"
             android:text="@string/illegal_info_freq"
@@ -27,12 +39,14 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-
-
     <LinearLayout
+        android:id="@+id/id_dialog_param_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        style="@style/StyleTable"
+        android:layout_below="@id/id_dialog_param_freq"
+        android:layout_toLeftOf="@id/id_dialog_sound">
         <TextView
             android:layout_width="50dp"
             android:layout_height="wrap_content"
@@ -48,10 +62,13 @@
             />
     </LinearLayout>
 
-   <LinearLayout
+    <LinearLayout
+        android:id="@+id/id_dialog_patam_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        style="@style/StyleTable"
+        android:layout_below="@id/id_dialog_param_status">
         <TextView
             style="@style/StyleTableTitle"
             android:layout_width="50dp"
@@ -60,15 +77,20 @@
         <TextView
             android:id="@+id/id_illegal_info_time"
             style="@style/StyleTableValue"
-            android:clickable="true"
             android:text="91.4MHz"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             />
     </LinearLayout>
+
+
     <LinearLayout
+        android:id="@+id/id_dialog_param_lon"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        style="@style/StyleTable"
+        android:layout_below="@id/id_dialog_patam_time">
         <TextView
             style="@style/StyleTableTitle"
             android:layout_width="50dp"
@@ -77,15 +99,18 @@
         <TextView
             android:id="@+id/id_illegal_info_lon"
             style="@style/StyleTableValue"
-            android:clickable="true"
             android:text="91.4MHz"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             />
     </LinearLayout>
+
     <LinearLayout
+        android:id="@+id/id_dialog_param_lat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/StyleTable"
+        android:layout_below="@id/id_dialog_param_lon"
         android:orientation="horizontal">
         <TextView
             style="@style/StyleTableTitle"
@@ -95,7 +120,6 @@
         <TextView
             android:id="@+id/id_illegal_info_lat"
             style="@style/StyleTableValue"
-            android:clickable="true"
             android:text="91.4MHz"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
@@ -103,10 +127,12 @@
     </LinearLayout>
 
 
-
     <LinearLayout
+        android:id="@+id/id_dialog_param_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/id_dialog_param_lat"
+        style="@style/StyleTable"
         android:orientation="horizontal">
         <TextView
             style="@style/StyleTableTitle"
@@ -124,8 +150,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/id_dialog_param_explain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/id_dialog_param_address"
+        style="@style/StyleTable"
         android:orientation="horizontal">
         <TextView
             style="@style/StyleTableTitle"
@@ -137,29 +166,33 @@
             style="@style/StyleTableValue"
             android:clickable="true"
             android:text="91.4MHz"
+            android:maxLines="3"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             />
     </LinearLayout>
 
-
     <LinearLayout
+        android:id="@+id/id_dialog_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-       <Button
-           android:id="@+id/id_illegal_info_ok"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_weight="1"
-           android:text="@string/ok"/>
+        android:layout_margin="1dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/id_dialog_param_explain">
+        <Button
+            android:id="@+id/id_illegal_info_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/imagebutton_selector"
+            android:text="@string/ok"/>
         <Button
             android:id="@+id/id_illegal_info_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/imagebutton_selector"
             android:text="@string/cancel"/>
     </LinearLayout>
 
-
-</LinearLayout>
+</RelativeLayout>

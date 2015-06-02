@@ -1,11 +1,24 @@
 package com.ldkj.illegal_radio.utils;
 
+import android.os.Environment;
+
 /**
  * Created by john on 15-4-10.
  */
 public class Attribute {
     public static final boolean DEBUG = true;
     public static final String TAG = "com_ldkj_illegal_radio";
+
+
+    public static final String EXTERNALSTORAGEDIRECTORY = Environment
+            .getExternalStorageDirectory().getPath();
+    public static final String FOLDER_PATH_ROOT = EXTERNALSTORAGEDIRECTORY
+            + "/零点科技/";
+    public static final String FOLDER_PATH_SOUND = FOLDER_PATH_ROOT + "录音文件/";
+    public static final String APK_PATH = FOLDER_PATH_ROOT + "tts.apk";
+
+
+
 
     public static final int MSG_UPDATE_LOCATION = 200010;
 
@@ -17,7 +30,7 @@ public class Attribute {
 
 
     public static final int  AVG_COUNT = 10;
-
+    public static final double UTILS = 10.0;
 
     public enum DATATYPE{
         SCANDATA,SPECDATE,IQDATA
@@ -27,6 +40,10 @@ public class Attribute {
     }
     public enum OPERATION_TYPE{
         UPDATE,INSTER,DELETE,SELECT
+    }
+
+    public enum SOUNDTYPE{
+        DEVICE,MUTE,VOICE
     }
 
 

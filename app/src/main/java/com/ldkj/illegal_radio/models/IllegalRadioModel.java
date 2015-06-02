@@ -7,7 +7,7 @@ public class IllegalRadioModel  {
 
     public long uid = -1;
     public int handle = 0;
-    public String freq = "91.4MHz";  // 带单位
+    public String freq = "";  // 带单位
     public String appeartime;
     public double lon;
     public double lat;

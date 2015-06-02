@@ -58,6 +58,15 @@
     <string name="illegal_info_tag">说明</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
+    <string name="task_single_off">停止</string>
+    <string name="task_single_on">开始</string>
+
+
+    <string name="install">安装</string>
+    <string name="setting">设置</string>
+    <string name="install_tip">设备不支持中文语用播报，点击安装按钮完成中文语音的安装</string>
+    <string name="setting_tip">中文语音包已经安装完成，点击设置，完成操作</string>
+    <string name="error">不支持语音播报</string>
 
 
 </resources>

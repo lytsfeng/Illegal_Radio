@@ -91,6 +91,7 @@ public class LocationService extends Service implements AMapLocationListener {
 		 * ，第一个参数是定位provider，第二个参数时间最短是2000毫秒，第三个参数距离间隔单位是米，第四个参数是定位监听者
 		 */
         locationManager.requestLocationUpdates(
+                /*LocationManagerProxy.GPS_PROVIDER*/
                 LocationProviderProxy.AMapNetwork, CHECK_POSITION_INTERVAL, CHECK_POSITION_DISTANCE, this);
     }
 

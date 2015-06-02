@@ -1,5 +1,6 @@
 package com.ldkj.illegal_radio.utils.audios;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -29,9 +30,10 @@ public class WriteWaveFileThread implements Runnable {
         FileOutputStream out = null;
         long totalAudioLen = 0;
         long totalDataLen = 0;
-        long longSampleRate = AUDIO_SAMPLE_RATE;
-        long byteRate = 16 * AUDIO_SAMPLE_RATE * CHANNELS / 8;
-        byte[] data = new byte[2048];
+        long longSampleRate = 16000;
+        int channels =2;
+        long byteRate = 16 * longSampleRate * channels / 8;
+        byte[] data = new byte[(int) byteRate];
         try {
             in = new FileInputStream(inFilename);
             out = new FileOutputStream(outFilename);
@@ -44,6 +46,7 @@ public class WriteWaveFileThread implements Runnable {
             }
             in.close();
             out.close();
+            new File(inFilename).delete();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

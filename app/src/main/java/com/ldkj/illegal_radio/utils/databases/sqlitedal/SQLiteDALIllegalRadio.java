@@ -23,14 +23,14 @@ public class SQLiteDALIllegalRadio extends SQLiteDALBase<IllegalRadioModel> {
 //        radioModel.appeartime = getTime();
         String _sql = MessageFormat.format("insert into Illegal " +
                         "([handle],[freq],[time],[lon],[lat],[address],[tag]) " +
-                        "values ({0},''{1}'',''{2}'',{3},{4},''{5}'',''{6}'');",
+                        "values ({0},''{1}'',''{2}'',''{3}'',''{4}'',''{5}'',''{6}'');",
                 radioModel.handle, radioModel.freq,
-                radioModel.appeartime, radioModel.lon, radioModel.lat,
+                radioModel.appeartime, radioModel.lon*10000 , radioModel.lat*10000,
                 radioModel.address, radioModel.tag);
         try{
             GetDataBase().execSQL(_sql);
         }catch (Exception r){
-            r.toString();
+            r.printStackTrace();
         }
         radioModel.uid = getMaxId();
         return radioModel;
@@ -64,8 +64,12 @@ public class SQLiteDALIllegalRadio extends SQLiteDALBase<IllegalRadioModel> {
         _RadioModels.handle = pCursor.getInt(pCursor.getColumnIndex("handle"));
         _RadioModels.freq = pCursor.getString(pCursor.getColumnIndex("freq"));
         _RadioModels.appeartime = pCursor.getString(pCursor.getColumnIndex("time"));
-        _RadioModels.lat = pCursor.getDouble(pCursor.getColumnIndex("lat"));
-        _RadioModels.lon = pCursor.getDouble(pCursor.getColumnIndex("lon"));
+        String _lat = pCursor.getString(pCursor.getColumnIndex("lat"));
+        _lat = _lat.replaceAll(",","");
+        _RadioModels.lat = Double.parseDouble(_lat)/10000.0;
+        String _lon = pCursor.getString(pCursor.getColumnIndex("lon"));
+        _lon = _lon.replaceAll(",","");
+        _RadioModels.lon = Double.parseDouble(_lon)/10000.0;
         _RadioModels.address = pCursor.getString(pCursor.getColumnIndex("address"));
         _RadioModels.tag = pCursor.getString(pCursor.getColumnIndex("tag"));
         return _RadioModels;
@@ -83,8 +87,8 @@ public class SQLiteDALIllegalRadio extends SQLiteDALBase<IllegalRadioModel> {
                 "[handle] integer not null," +
                 "[freq] long not null," +
                 "[time] datetime not null," +
-                "[lon] real not null," +
-                "[lat] real not null," +
+                "[lon] text not null," +
+                "[lat] text not null," +
                 "[address] text," +
                 "[tag] text)";
         p_DataBase.execSQL(_sql);
