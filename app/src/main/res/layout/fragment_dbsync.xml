@@ -1,0 +1,51 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ldkj.illegal_radio.fragments.DBFragmes.DBSyncFragment">
+
+      <TableRow style="@style/style_table"
+          >
+          <TextView
+              style="@style/style_table_title"
+              android:text="地址"/>
+          <EditText
+              android:id="@+id/et_db_address"
+              style="@style/style_table_et_value"
+              android:text="127.0.0.1"/>
+      </TableRow>
+      <TableRow style="@style/style_table">
+          <TextView
+              style="@style/style_table_title"
+              android:text="端口"/>
+          <EditText
+              android:id="@+id/et_db_port"
+              style="@style/style_table_et_value"
+              android:text="65004"/>
+      </TableRow>
+
+      <Button
+          android:id="@+id/btn_db_conn"
+          android:text="@string/connect"
+          android:background="@drawable/imagebutton_selector"/>
+
+
+      <LinearLayout android:orientation="vertical"
+          android:layout_marginTop="50dp"
+          android:layout_marginLeft="50dp"
+          android:layout_marginRight="50dp"
+          >
+          <ImageButton
+              android:id="@+id/ibtn_db_push"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:src="@mipmap/ic_launcher"
+              android:background="@drawable/imagebutton_selector"/>
+          <ImageButton
+              android:id="@+id/ibtn_db_pull"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:src="@mipmap/ic_launcher"
+              android:background="@drawable/imagebutton_selector"/>
+      </LinearLayout>
+
+</TableLayout>

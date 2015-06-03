@@ -14,6 +14,25 @@ public class IllegalRadioModel  {
     public String address;
     public String tag;
 
+
+    public IllegalRadioModel() {
+    }
+
+    public IllegalRadioModel(IllegalRadioModel pModel) {
+
+        if(pModel != null){
+            this.uid = pModel.uid;
+            this.handle = pModel.handle;
+            this.freq = pModel.freq;
+            this.appeartime = pModel.appeartime;
+            this.lon = pModel.lon;
+            this.lat = pModel.lat;
+            this.address = pModel.address;
+            this.tag = pModel.tag;
+        }
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -37,4 +56,18 @@ public class IllegalRadioModel  {
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
+
+    public int  compareTo(IllegalRadioModel radioModel){
+        if(radioModel == null){
+            return 1;
+        }
+        if(this.handle == radioModel.handle){
+            return 0;
+        }
+        if(this.handle > radioModel.handle){
+            return 1;
+        }
+        return  -1;
+    }
+
 }

@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.ldkj.illegal_radio.R;
@@ -21,8 +21,8 @@ public class DeviceFragment extends FragmentBase {
     private EditText etTcpPort;
     private EditText etUdpPort;
     private TextView tvType;
-    private ImageButton iBtnOk;
-    private ImageButton iBtnCannel;
+    private Button iBtnOk;
+    private Button iBtnCannel;
 
     public DeviceFragment() {
 
@@ -30,12 +30,19 @@ public class DeviceFragment extends FragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        stopSelfTask();
         config = DeviceConfig.getDeviceConfig();
         View _View = inflater.inflate(R.layout.fragment_device, container, false);
         initView(_View);
         bindData();
         addListener();
         return _View;
+    }
+
+    @Override
+    public void onDestroyView() {
+        startNewTask();
+        super.onDestroyView();
     }
 
     @Override
@@ -48,7 +55,7 @@ public class DeviceFragment extends FragmentBase {
     @Override
     protected void startNewTask() {
         if(listener != null){
-            listener.setWorkStatus(false);
+            listener.setWorkStatus(true);
         }
     }
 
@@ -62,8 +69,8 @@ public class DeviceFragment extends FragmentBase {
         etTcpPort = (EditText) v.findViewById(R.id.et_device_tcp_port);
         etUdpPort = (EditText) v.findViewById(R.id.et_device_udp_port);
         tvType = (TextView) v.findViewById(R.id.tv_device_type);
-        iBtnOk = (ImageButton)v.findViewById(R.id.ibtn_device_ok);
-        iBtnCannel =(ImageButton)v.findViewById(R.id.ibtn_device_cannel);
+        iBtnOk = (Button)v.findViewById(R.id.ibtn_device_ok);
+        iBtnCannel =(Button)v.findViewById(R.id.ibtn_device_cannel);
     }
     private void bindData(){
         etAddress.setText(config.address);

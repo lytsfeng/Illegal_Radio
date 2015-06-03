@@ -15,10 +15,10 @@ public abstract class ADevice implements IDevice {
 
     protected BufferedInputStream inputStream;
     protected OutputStream outputStream;
+    protected boolean isconn = false;
     private Socket socket;
     private String address = "192.168.100.232";
     private int port = 65000;
-    protected boolean isconn = false;
 
 
     public ADevice(String address, int port) {
@@ -75,9 +75,11 @@ public abstract class ADevice implements IDevice {
         }
         try {
             byte[] _messageBuffer = pCMD.getBytes("ASCII");
-            outputStream.write(_messageBuffer);
-            outputStream.flush();
-            _isSend = true;
+            if (outputStream != null) {
+                outputStream.write(_messageBuffer);
+                outputStream.flush();
+                _isSend = true;
+            }
         } catch (IOException e) {
             e.printStackTrace();
             resetConn();
@@ -86,28 +88,32 @@ public abstract class ADevice implements IDevice {
     }
 
     protected void resetInput() {
-        try {
-            int _len = inputStream.available();
-            byte[] _buf = null;
-            if (_len > 0) {
-                _buf = readTcpData(_len);
+        if (inputStream != null) {
+            try {
+                int _len = inputStream.available();
+                byte[] _buf = null;
+                if (_len > 0) {
+                    _buf = readTcpData(_len);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
     protected int readData(byte[] _buf, int _PerIndex, int _DataLength) {
         int _Rec = 0;
-        if (inputStream == null || !isconn) {
-            return _Rec;
-        }
-        try {
-            _Rec = inputStream.read(_buf, _PerIndex, _DataLength);
-        } catch (SocketTimeoutException e) {
-            _Rec = 0;
-        } catch (IOException e) {
-            _Rec = 0;
+        if(inputStream != null){
+            if (inputStream == null || !isconn) {
+                return _Rec;
+            }
+            try {
+                _Rec = inputStream.read(_buf, _PerIndex, _DataLength);
+            } catch (SocketTimeoutException e) {
+                _Rec = 0;
+            } catch (IOException e) {
+                _Rec = 0;
+            }
         }
         return _Rec;
     }

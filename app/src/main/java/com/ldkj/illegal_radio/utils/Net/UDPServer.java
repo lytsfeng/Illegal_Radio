@@ -44,8 +44,10 @@ public class UDPServer implements Runnable {
         DatagramPacket _inComing = new DatagramPacket(_buffer, bufferSize);
         while (isStart) {
             try {
-                socket.receive(_inComing);
-                dataAnalysis(_inComing.getData(), _inComing.getLength());
+                if(socket != null){
+                    socket.receive(_inComing);
+                    dataAnalysis(_inComing.getData(), _inComing.getLength());
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

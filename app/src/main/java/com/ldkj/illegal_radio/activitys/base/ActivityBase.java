@@ -1,11 +1,11 @@
 package com.ldkj.illegal_radio.activitys.base;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
 import com.ldkj.illegal_radio.views.CustomToast;
@@ -17,7 +17,7 @@ import java.util.Queue;
 /**
  * Created by john on 15-4-10.
  */
-public class ActivityBase extends Activity {
+public class ActivityBase extends FragmentActivity {
 
     private ProgressDialog progressDialog;
     Queue<Float[]> spceQueue = new ArrayDeque<Float[]>();
@@ -90,21 +90,21 @@ public class ActivityBase extends Activity {
         if(fragment == null){
             return;
         }
-        FragmentManager _Manager = getFragmentManager();
+        FragmentManager _Manager = getSupportFragmentManager();
         FragmentTransaction _Transaction = _Manager.beginTransaction();
         _Transaction.replace(fragmentID,fragment);
         _Transaction.commit();
     }
 
     protected void removeFreagment(int fragmentID){
-        FragmentManager _Manager = getFragmentManager();
+        FragmentManager _Manager = getSupportFragmentManager();
         FragmentTransaction _Transaction = _Manager.beginTransaction();
         _Transaction.remove(_Manager.findFragmentById(fragmentID));
         _Transaction.commit();
     }
 
     protected  Fragment getFreagment(int fragmentid){
-        return getFragmentManager().findFragmentById(fragmentid);
+        return getSupportFragmentManager().findFragmentById(fragmentid);
     }
 
     protected void startService(Class<?> cls) {

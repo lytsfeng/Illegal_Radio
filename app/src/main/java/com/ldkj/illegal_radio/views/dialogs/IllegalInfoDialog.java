@@ -73,10 +73,11 @@ public class IllegalInfoDialog extends DialogBase implements DialogBase.DialogCa
 
     private void bindDate() {
         if (model != null) {
-            if(model.uid == -1 || !Utils.isExit(Utils.getSoundFileName(model,true))) {
-                box_sound.setVisibility(View.GONE);
-            }else {
+            if(model.uid != -1 ) {
                 tvFreq.setClickable(false);
+            }
+            if(!Utils.isExit(Utils.getSoundFileName(model,true))){
+                box_sound.setVisibility(View.GONE);
             }
             tvFreq.setText(model.freq);
             tvStatus.setText(model.handle >= 1 ? NO_ILLEGAL : ILLEGAL);
@@ -119,7 +120,8 @@ public class IllegalInfoDialog extends DialogBase implements DialogBase.DialogCa
                 dismiss();
                 break;
             case R.id.id_illegal_info_ok:
-                if(!TextUtils.isEmpty(model.freq)){
+                String _freq = tvFreq.getText().toString().trim();
+                if(!TextUtils.isEmpty(_freq)){
                     if (callBack != null)
                         callBack.DialogBack(getModel(), 0, false);
                     dismiss();

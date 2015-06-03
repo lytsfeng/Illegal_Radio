@@ -45,20 +45,20 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
-        <ImageButton
+        <Button
             android:id="@+id/ibtn_device_ok"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@mipmap/ic_launcher"
-            android:background="@drawable/imagebutton_selector"/>
-        <ImageButton
+            android:background="@drawable/imagebutton_selector"
+            android:text="@string/ok"/>
+        <Button
             android:id="@+id/ibtn_device_cannel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@mipmap/ic_launcher"
-            android:background="@drawable/imagebutton_selector"/>
+            android:background="@drawable/imagebutton_selector"
+            android:text="@string/cancel"/>
     </LinearLayout>
 
 </TableLayout>

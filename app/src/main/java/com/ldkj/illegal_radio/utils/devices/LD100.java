@@ -101,6 +101,10 @@ public class LD100 extends ADevice {
             return null;
         }
         int _datalength = _date.length;
+        if(_datalength > scanData.date.length){
+            return null;
+        }
+
         if (_date[_datalength - 1] == 200) {
             if (_datalength + scanData.index > scanData.date.length + 1) {
                 scanData.index = scanData.date.length - _datalength + 1;

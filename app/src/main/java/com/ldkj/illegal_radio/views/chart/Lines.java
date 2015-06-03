@@ -51,6 +51,12 @@ public class Lines extends /*View*/ SurfaceView implements SurfaceHolder.Callbac
 
 
     public void bindData(float[] date){
+        if(date == null){
+            return;
+        }
+        if(chartContainer == null){
+            return;
+        }
         chartContainer.bindDate(date);
         isChange = true;
         isdraw = false;

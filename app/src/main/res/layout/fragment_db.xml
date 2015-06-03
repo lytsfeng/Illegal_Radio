@@ -1,50 +1,57 @@
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.ldkj.illegal_radio.fragments.DBFragment">
 
-    <TableRow style="@style/style_table"
-        >
-        <TextView
-            style="@style/style_table_title"
-            android:text="地址"/>
-        <EditText
-            android:id="@+id/et_db_address"
-            style="@style/style_table_et_value"
-            android:text="127.0.0.1"/>
-    </TableRow>
-    <TableRow style="@style/style_table">
-        <TextView
-            style="@style/style_table_title"
-            android:text="端口"/>
-        <EditText
-            android:id="@+id/et_db_port"
-            style="@style/style_table_et_value"
-            android:text="65004"/>
-    </TableRow>
-
-    <Button
-        android:id="@+id/btn_db_conn"
-        android:text="连接"/>
 
 
-    <LinearLayout android:orientation="vertical"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        >
-        <ImageButton
-            android:id="@+id/ibtn_db_push"
+
+    <RadioGroup
+        android:id="@+id/id_illegal_db_title"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/id_illegal_db_illegal"
+            style="@style/StyleTableValue"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@mipmap/ic_launcher"
-            android:background="@drawable/imagebutton_selector"/>
-        <ImageButton
-            android:id="@+id/ibtn_db_pull"
+            android:layout_weight="1"
+            android:background="@drawable/icon_checkbox_selector"
+            android:button="@null"
+            android:gravity="center"
+            android:text="黑广播"
+             />
+        <RadioButton
+            android:id="@+id/id_illegal_db_radio"
+            style="@style/StyleTableValue"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@mipmap/ic_launcher"
-            android:background="@drawable/imagebutton_selector"/>
-    </LinearLayout>
+            android:layout_weight="1"
+            android:background="@drawable/icon_checkbox_selector"
+            android:button="@null"
+            android:gravity="center"
+            android:text="广播"
+            />
+        <RadioButton
+            android:id="@+id/id_illegal_db_sync"
+            style="@style/StyleTableValue"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/icon_checkbox_selector"
+            android:button="@null"
+            android:gravity="center"
+            android:text="同步"/>
+    </RadioGroup>
 
-</TableLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/id_illegal_db_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/id_illegal_db_title">
+    </android.support.v4.view.ViewPager>
+
+
+</RelativeLayout>

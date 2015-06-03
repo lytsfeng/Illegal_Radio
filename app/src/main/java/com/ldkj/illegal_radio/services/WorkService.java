@@ -59,7 +59,7 @@ public class WorkService extends Service implements UDPServer.UDPCallBack{
         Log.i(Attribute.TAG, "workserviceOnBind");
         initPlay();
         EventBus.getDefault().register(this);
-        device = DeviceFactory.getDevice();
+
         return new LocalBinder();
     }
 
@@ -80,6 +80,7 @@ public class WorkService extends Service implements UDPServer.UDPCallBack{
     public void startWork() {
         Log.i(Attribute.TAG, "startwork");
         isConn = false;
+        device = DeviceFactory.getDevice();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -112,6 +113,7 @@ public class WorkService extends Service implements UDPServer.UDPCallBack{
         }
         if(udpServer!=null){
             udpServer.close();
+            udpServer = null;
         }
         isStart = false;
     }

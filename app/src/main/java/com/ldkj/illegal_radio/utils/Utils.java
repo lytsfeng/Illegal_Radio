@@ -1,5 +1,7 @@
 package com.ldkj.illegal_radio.utils;
 
+import android.text.TextUtils;
+
 import com.ldkj.illegal_radio.OwnApplication;
 import com.ldkj.illegal_radio.R;
 import com.ldkj.illegal_radio.models.IllegalRadioModel;
@@ -24,6 +26,9 @@ public class Utils {
      * @return
      */
     public static boolean isNumeric(String str) {
+        if(TextUtils.isEmpty(str)){
+            return false;
+        }
         Pattern pattern = Pattern.compile("[0-9]*");
         Matcher isNum = pattern.matcher(str.trim());
         if (!isNum.matches()) {

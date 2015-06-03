@@ -18,7 +18,8 @@
         <item>MapFragment</item>
         <item>ScanFragment</item>
         <item>SingleFragment2</item>
-        <item>SettingFragment</item>
+        <item>DBFragment</item>
+        <item>DeviceFragment</item>
         <item>AboutFragment</item>
     </array>
     <array name="illegal_status_name">

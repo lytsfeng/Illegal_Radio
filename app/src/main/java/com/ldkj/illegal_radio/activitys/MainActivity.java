@@ -258,6 +258,9 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
 
     public void onEventMainThread(NetEvent netEvent) {
         isConn = netEvent.isConn();
+        if(isConn && this.tasktype == Attribute.TASKTYPE.SCAN){
+            startTask(Attribute.TASKTYPE.SCAN);
+        }
     }
 
     public void onEventMainThread(LatLng latLng) {
@@ -287,7 +290,12 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
     @Override
     public void stopTask(Attribute.TASKTYPE tasktype) {
         if (taskThread != null) {
-            if (taskThread.getTasktype() == tasktype) {
+
+            if(tasktype == Attribute.TASKTYPE.NO){
+                taskThread.setTaskStatus(false);
+                setCommand(Attribute.DELETEUDP);
+                taskThread = null;
+            }else if (taskThread.getTasktype() == tasktype) {
                 taskThread.setTaskStatus(false);
                 taskThread = null;
             }
@@ -301,6 +309,9 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
             case UPDATE:
                 if (illegalRadioModelSQLiteDALBase != null) {
                     illegalRadioModelSQLiteDALBase.Update("and uid = " + model.uid, model);
+                    mainIllegalRadioModelSet.remove(model);
+                    if(model.handle <= 0)
+                        mainIllegalRadioModelSet.add(model);
                     _Model1 = model;
                 }
                 break;
@@ -350,11 +361,16 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
 
     @Override
     public boolean startTask(Attribute.TASKTYPE tasktype) {
+
+        if(tasktype == Attribute.TASKTYPE.NO){
+            tasktype = this.tasktype;
+        }
         if (taskThread != null) {
             if (tasktype == taskThread.getTasktype()) {
                 return true;
             }
         }
+        this.tasktype = tasktype;
         if (workService != null) {
             if (workService.startTask(tasktype)) {
                 if (taskThread != null) {
