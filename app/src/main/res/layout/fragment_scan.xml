@@ -32,13 +32,13 @@
                android:layout_height="30dp"
                android:gravity="center"
                android:background="@drawable/background_shape_transparent"
-               android:text="@string/illegal_info_lat"/>
+               android:text="@string/info_lat"/>
            <TextView
                android:layout_width="65dp"
                android:background="@drawable/background_shape_transparent"
                android:layout_height="30dp"
                android:gravity="center"
-               android:text="@string/illegal_info_lon"/>
+               android:text="@string/info_lon"/>
        </TableRow>
 
     </TableLayout>

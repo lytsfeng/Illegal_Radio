@@ -2,6 +2,8 @@ package com.ldkj.illegal_radio.utils;
 
 import android.text.TextUtils;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.maps.model.LatLng;
 import com.ldkj.illegal_radio.OwnApplication;
 import com.ldkj.illegal_radio.R;
 import com.ldkj.illegal_radio.models.IllegalRadioModel;
@@ -203,5 +205,15 @@ public class Utils {
             _flag = _file.mkdir();
         }
         return _file.getPath();
+    }
+
+
+    public static LatLng getLatLng(AMapLocation latLng){
+        LatLng _latLng = new LatLng(Double.parseDouble(String.format("%.4f", latLng.getLatitude())), Double.parseDouble(String.format("%.4f", latLng.getLongitude())));
+        return _latLng;
+    }
+    public static LatLng getLatLng(LatLng latLng){
+        LatLng _latLng = new LatLng(Double.parseDouble(String.format("%.4f", latLng.latitude)), Double.parseDouble(String.format("%.4f", latLng.longitude)));
+        return _latLng;
     }
 }

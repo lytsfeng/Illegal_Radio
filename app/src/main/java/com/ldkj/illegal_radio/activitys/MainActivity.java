@@ -223,20 +223,21 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
         if (workService != null) {
             workService.startReco(_mode);
         }
-        singleTimer = new Timer();
-        singleTimer.schedule(new TimerTask() {
+//        singleTimer = new Timer();
+        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 Single _Single = Single.setSingle(_freq);
                 stopTask(Attribute.TASKTYPE.SCAN);
                 startTask(Attribute.TASKTYPE.SINGLE);
                 setDemodulation(_Single.demodulationMode);
-                Timer t = new Timer();
-                t.schedule(new TimerTask() {
+                singleTimer = new Timer();
+                singleTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
                         stopTask(Attribute.TASKTYPE.SINGLE);
-                        startTask(Attribute.TASKTYPE.SCAN);
+                        if (currentFragment instanceof ScanFragment)
+                            startTask(Attribute.TASKTYPE.SCAN);
                         if (workService != null) {
                             workService.stopReco();
                         }
@@ -289,6 +290,16 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
 
     @Override
     public void stopTask(Attribute.TASKTYPE tasktype) {
+
+        if(!(currentFragment instanceof ScanFragment)){
+            if(singleTimer != null){
+                singleTimer.cancel();
+                singleTimer = null;
+                if (workService != null) {
+                    workService.stopReco();
+                }
+            }
+        }
         if (taskThread != null) {
 
             if(tasktype == Attribute.TASKTYPE.NO){

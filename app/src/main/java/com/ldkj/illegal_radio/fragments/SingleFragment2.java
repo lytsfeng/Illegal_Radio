@@ -58,6 +58,8 @@ public class SingleFragment2 extends FragmentBase implements RadioGroup.OnChecke
     private Boolean isFloor = false;
     private Boolean isRuning = false;   //  true   为正在运行single   false 为  没有运行single
     private int currentFloor = 1;
+    private int oldFloor = 1;
+    private Boolean isChangeFloor = false;
     private Map<Integer, Level> levelMap = new HashMap<>();
     private Level currentLevel = null;
     private Integer avgCount;
@@ -218,7 +220,7 @@ public class SingleFragment2 extends FragmentBase implements RadioGroup.OnChecke
                 } else if (checkedId == R.id.id_illegal_single_work_usually) {
                     llFloorControl.setVisibility(View.GONE);
                     isFloor = false;
-                    currentFloor = 1;
+                    setFloor(1);
                 }
                 break;
             default:
@@ -243,21 +245,23 @@ public class SingleFragment2 extends FragmentBase implements RadioGroup.OnChecke
                 break;
 
             case R.id.id_illegal_single_floor_add:
-//                isDraw = true;
-                currentFloor++;
+                if(!isRuning ){
+                    if(currentFloor >= levelMap.size()){
+                        break;
+                    }
+                }
+                setFloor(currentFloor+1);
                 currentLevel = null;
                 tvCurrentFloor.setText(currentFloor+"");
                 break;
             case R.id.id_illegal_single_floor_sub:
-//                isDraw = true;
                 if(currentFloor > 1){
                     currentLevel = null;
-                    currentFloor--;
+                    setFloor(currentFloor-1);;
                     tvCurrentFloor.setText(currentFloor+"");
                 }
                 break;
             case R.id.id_illegal_single_bottom:
-//                isDraw = true;
                 setTaskStatus(!isRuning);
                 break;
             default:
@@ -275,7 +279,6 @@ public class SingleFragment2 extends FragmentBase implements RadioGroup.OnChecke
 
     @Override
     public void DialogBack(String s, int p_ResId, Boolean isInit) {
-//        isDraw = true;
         TextView _tv = (TextView) view.findViewById(p_ResId);
         if (_tv != null)
             _tv.setText(s);
@@ -341,6 +344,11 @@ public class SingleFragment2 extends FragmentBase implements RadioGroup.OnChecke
                 _isChange = true;
             }
         }
+        if(isChangeFloor){
+            currentLevel.setLevelMax(currentLevel.levelMax);
+            currentLevel.setLevelMin(currentLevel.levelMin);
+            isChangeFloor = false;
+        }
         if (currentLevel.levelMax < pValue) {
             currentLevel.setLevelMax(pValue);
             _isChange = true;
@@ -372,6 +380,22 @@ public class SingleFragment2 extends FragmentBase implements RadioGroup.OnChecke
         }
     }
 
+
+    private void setFloor(int floor){
+        isChangeFloor = floor != oldFloor;
+        if(isChangeFloor){
+            currentFloor = oldFloor = floor;
+        }
+        if(!isRuning){
+            int _floorCount = levelMap.size();
+            if(floor <= _floorCount){
+                currentLevel = levelMap.get(floor);
+                currentLevel.setLevelMax(currentLevel.levelMax);
+                currentLevel.setLevelMin(currentLevel.levelMin);
+            }
+        }
+
+    }
 
     class Level {
         private int levelMax;

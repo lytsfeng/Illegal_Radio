@@ -17,6 +17,7 @@ import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
 import com.ldkj.illegal_radio.utils.Attribute;
 import com.ldkj.illegal_radio.utils.LogUtils;
+import com.ldkj.illegal_radio.utils.Utils;
 
 import de.greenrobot.event.EventBus;
 
@@ -25,7 +26,7 @@ public class LocationService extends Service implements AMapLocationListener {
     public static final String ACTION_LOCATION_CHANGE = "com.ldkj.env.LOCATION_CHANGE";
     public static final String KEY_LOCATION_CHANGE = "key_location_change";
 
-    public static final String MAPPREFERENCESNAME = "map_preferencesname";
+    public static final String MAPPREFERENCESNAME = "map_location_preferencesname";
     public static final String KEY_LATITUDE = "latitude";
     public static final String KEY_LONGITUDE = "longitude";
     private final static int CHECK_POSITION_INTERVAL = 6 * 1000; // 重新获取位置信息的时间间隔
@@ -63,7 +64,7 @@ public class LocationService extends Service implements AMapLocationListener {
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
         boolean _isChange = true;
-        LatLng _LatLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
+        LatLng _LatLng = Utils.getLatLng(aMapLocation);
         if (oldLatlng != null) {
             if (AMapUtils.calculateArea(_LatLng, oldLatlng) > DIS) {
                 _isChange = true;
@@ -71,7 +72,6 @@ public class LocationService extends Service implements AMapLocationListener {
         } else {
             _isChange = true;
         }
-
         if (_isChange) {
             oldLatlng = latLng = _LatLng;
             EventBus.getDefault().post(oldLatlng);

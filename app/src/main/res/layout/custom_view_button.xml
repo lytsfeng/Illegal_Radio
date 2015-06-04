@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/StyleTable"
+    android:background="@drawable/imagebutton_selector">
+    <ImageView
+        android:id="@+id/custion_view_btn_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:src="@mipmap/ic_launcher"/>
+    <TextView
+        android:id="@+id/custion_view_btn_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/custion_view_btn_icon"
+        android:layout_alignTop="@id/custion_view_btn_icon"
+        android:textSize="20sp"
+        android:text="上传"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/custion_view_btn_icon"
+        android:layout_alignBottom="@id/custion_view_btn_icon"
+        android:text="上传到服务器"/>
+</RelativeLayout>

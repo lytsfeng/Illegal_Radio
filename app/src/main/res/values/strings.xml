@@ -49,13 +49,13 @@
 
 
 
-    <string name="illegal_info_freq">频率</string>
+    <string name="info_freq">频率</string>
     <string name="illegal_info_status">状态</string>
     <string name="illegal_info_time">时间</string>
-    <string name="illegal_info_lon">经度</string>
-    <string name="illegal_info_lat">纬度</string>
-    <string name="illegal_info_address">地址</string>
-    <string name="illegal_info_tag">说明</string>
+    <string name="info_lon">经度</string>
+    <string name="info_lat">纬度</string>
+    <string name="info_address">地址</string>
+    <string name="info_tag">说明</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
     <string name="task_single_off">停止</string>
@@ -68,6 +68,11 @@
     <string name="setting_tip">中文语音包已经安装完成，点击设置，完成操作</string>
     <string name="error">不支持语音播报</string>
     <string name="connect">连接</string>
+    <string name="radio_name">名称</string>
+    <string name="info_starttime">开始时间</string>
+    <string name="info_endtime">结束时间</string>
+    <string name="info_span">带宽</string>
+    <string name="info_power">发射功率</string>
 
 
 </resources>

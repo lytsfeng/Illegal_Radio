@@ -1,9 +1,45 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffff00"
-    tools:context="com.ldkj.illegal_radio.fragments.DBFragmes.DBIllegalFragment">
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    android:orientation="vertical"
+    tools:context="com.ldkj.illegal_radio.fragments.DBFragmes.DBRadioFragment">
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:stretchColumns="1">
+        <TableRow
+            android:background="@android:drawable/bottom_bar"
+            >
+            <TextView
+                android:layout_width="80dp"
+                android:background="@drawable/background_shape_transparent"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="频率(MHz)"/>
+            <TextView
+                android:background="@drawable/background_shape_transparent"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="@string/illegal_info_time"/>
+            <TextView
+                android:layout_width="65dp"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:background="@drawable/background_shape_transparent"
+                android:text="@string/info_lat"/>
+            <TextView
+                android:layout_width="65dp"
+                android:background="@drawable/background_shape_transparent"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text="@string/info_lon"/>
+        </TableRow>
 
-</FrameLayout>
+    </TableLayout>
+    <ListView
+        android:id="@+id/id_illegal_db_radio_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"></ListView>
+</LinearLayout>
+

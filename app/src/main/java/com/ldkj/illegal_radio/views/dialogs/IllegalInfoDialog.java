@@ -50,13 +50,13 @@ public class IllegalInfoDialog extends DialogBase implements DialogBase.DialogCa
 
 
     private void initView() {
-        tvFreq = (TextView) findViewById(R.id.id_illegal_info_freq);
-        tvStatus = (TextView) findViewById(R.id.id_illegal_info_status);
+        tvFreq = (TextView) findViewById(R.id.id_radio_info_freq);
+        tvStatus = (TextView) findViewById(R.id.id_radio_info_name);
         tvTime = (TextView) findViewById(R.id.id_illegal_info_time);
-        tvlat = (TextView) findViewById(R.id.id_illegal_info_lat);
-        tvLon = (TextView) findViewById(R.id.id_illegal_info_lon);
-        et_address = (EditText) findViewById(R.id.id_illegal_info_address);
-        et_tag = (EditText) findViewById(R.id.id_illegal_info_tag);
+        tvlat = (TextView) findViewById(R.id.id_radio_info_lat);
+        tvLon = (TextView) findViewById(R.id.id_radio_info_lon);
+        et_address = (EditText) findViewById(R.id.id_radio_info_address);
+        et_tag = (EditText) findViewById(R.id.id_radio_info_tag);
         btn_ok = (Button) findViewById(R.id.id_illegal_info_ok);
         box_sound = (CheckBox) findViewById(R.id.id_dialog_sound);
         btn_ok.setFocusable(true);
@@ -104,10 +104,10 @@ public class IllegalInfoDialog extends DialogBase implements DialogBase.DialogCa
     @Override
     public void DialogBack(String s, int p_ResId, Boolean isInit) {
         switch (p_ResId){
-            case R.id.id_illegal_info_freq:
+            case R.id.id_radio_info_freq:
                 tvFreq.setText(s);
                 break;
-            case R.id.id_illegal_info_status:
+            case R.id.id_radio_info_name:
                 tvStatus.setText(s);
                 break;
         }
@@ -129,12 +129,12 @@ public class IllegalInfoDialog extends DialogBase implements DialogBase.DialogCa
                     Toast.makeText(OwnApplication.getContext(), "中心频率不能为空", Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case R.id.id_illegal_info_freq:
-                NumberDialog _di = new NumberDialog(getContext(),R.id.id_illegal_info_freq,this);
+            case R.id.id_radio_info_freq:
+                NumberDialog _di = new NumberDialog(getContext(),R.id.id_radio_info_freq,this);
                 _di.show();
                 break;
-            case R.id.id_illegal_info_status:
-                SelectListDialog _Dialog = new SelectListDialog(getContext(),R.id.id_illegal_info_status,R.array.illegal_status_name,this);
+            case R.id.id_radio_info_name:
+                SelectListDialog _Dialog = new SelectListDialog(getContext(),R.id.id_radio_info_name,R.array.illegal_status_name,this);
                 _Dialog.show();
                 break;
         }

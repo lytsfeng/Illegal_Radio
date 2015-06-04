@@ -46,6 +46,9 @@
               android:layout_height="match_parent"
               android:src="@mipmap/ic_launcher"
               android:background="@drawable/imagebutton_selector"/>
+
+          <include layout="@layout/custom_view_button"></include>
       </LinearLayout>
+
 
 </TableLayout>

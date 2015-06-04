@@ -25,14 +25,14 @@
             android:layout_height="35dp"
             android:background="@drawable/background_shape_transparent"
             android:gravity="center"
-            android:text="@string/illegal_info_lat" />
+            android:text="@string/info_lat" />
         <TextView
             android:id="@+id/id_item_illegal_lon"
             android:layout_width="65dp"
             android:layout_height="35dp"
             android:background="@drawable/background_shape_transparent"
             android:gravity="center"
-            android:text="@string/illegal_info_lon" />
+            android:text="@string/info_lon" />
     </TableRow>
 
 

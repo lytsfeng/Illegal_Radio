@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 
 import com.amap.api.maps.AMap;
@@ -25,14 +27,19 @@ import com.ldkj.illegal_radio.events.NetEvent;
 import com.ldkj.illegal_radio.fragments.base.FragmentBase;
 import com.ldkj.illegal_radio.fragments.base.OnFragmentInteractionListener;
 import com.ldkj.illegal_radio.models.IllegalRadioModel;
+import com.ldkj.illegal_radio.models.RadioModels;
 import com.ldkj.illegal_radio.services.LocationService;
 import com.ldkj.illegal_radio.utils.Attribute;
 import com.ldkj.illegal_radio.utils.DateTools;
+import com.ldkj.illegal_radio.utils.databases.sqlitedal.SQLiteDALRadio;
 import com.ldkj.illegal_radio.views.dialogs.IllegalInfoDialog;
+import com.ldkj.illegal_radio.views.dialogs.RadioInfoDialog;
 import com.ldkj.illegal_radio.views.dialogs.base.DialogBase;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,6 +51,8 @@ import de.greenrobot.event.EventBus;
 public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListener, AMap.OnMapLongClickListener, DialogBase.DialogCallBack<IllegalRadioModel> {
 
 
+    private static final String MAPPREFERENCESNAME = "mappreferences";
+    private static final String RADIOCHECKKEY = "checkkey";
     private OnFragmentInteractionListener listener;
     private Activity activity;
     private AMap aMap;
@@ -58,7 +67,9 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
     private Set<IllegalRadioModel> mapIllegalRadioModelSet = new HashSet<>();
     private int positionMarkerIconId = -1;
     private boolean isFollow = false;
-
+    private CheckBox box_Radio = null;
+    private List<Marker> radioMarker = new ArrayList<>();
+    private SharedPreferences preferences = null;
     private LatLng latLng;
     private View.OnClickListener btnOnClickListener = new View.OnClickListener() {
         @Override
@@ -84,6 +95,7 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        stopSelfTask();
         sharedPreferences = activity.getSharedPreferences(LocationService.MAPPREFERENCESNAME, Context.MODE_APPEND);
         latLng = getLastLatlon();
     }
@@ -92,11 +104,14 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View _View = inflater.inflate(R.layout.fragment_map, container, false);
-        initView(_View);
-        addListener();
         mapView = (MapView) _View.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
+        initView(_View);
         initMap();
+        addListener();
+        if (preferences == null)
+            preferences = getActivity().getSharedPreferences(MAPPREFERENCESNAME, Context.MODE_APPEND);
+        box_Radio.setChecked(preferences.getBoolean(RADIOCHECKKEY,false));
         return _View;
     }
 
@@ -104,7 +119,7 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
     public void updateIllegal(IllegalRadioModel pModel, boolean isAdd) {
         synchronized (mapIllegalRadioModelSet) {
             if (isAdd && mapIllegalRadioModelSet.add(pModel)) {
-                drawMark(new LatLng(pModel.lat, pModel.lon), R.mipmap.ic_maker, false, pModel);
+                drawMark(new LatLng(pModel.lat, pModel.lon), R.mipmap.illegal_max, false, pModel);
             } else if (!isAdd) {
                 Marker _marker = Illegal_Marker_map.get(pModel);
                 if (_marker != null) {
@@ -125,7 +140,8 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
         aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.setOnMapLongClickListener(this);
         aMap.setOnMarkerClickListener(this);
-        drawMark(getLastLatlon(), ((MainActivity) activity).isConn() ? R.mipmap.runenter : R.mipmap.error, true, null);
+        isConnDevice = ((MainActivity) activity).isConn();
+        drawMark(getLastLatlon(), isConnDevice ? R.mipmap.runenter : R.mipmap.error, true, null);
         mapIllegalRadioModelSet.addAll(((MainActivity) activity).getMainIllegalRadioModelSet());
         initMarker();
         setCompass();
@@ -134,21 +150,51 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
     private void initView(View pView) {
         btn_compass = (ImageButton) pView.findViewById(R.id.map_icon_compass);
         btn_delete = (ImageButton) pView.findViewById(R.id.map_icon_delete);
+        box_Radio = (CheckBox) pView.findViewById(R.id.map_icon_maker);
         if (!isDeleteBtnVisibility) {
             btn_delete.setVisibility(View.GONE);
         }
-
     }
 
     private void initMarker() {
         for (IllegalRadioModel illegalRadioModel : mapIllegalRadioModelSet) {
-            drawMark(new LatLng(illegalRadioModel.lat, illegalRadioModel.lon), R.mipmap.ic_maker, false, illegalRadioModel);
+            drawMark(new LatLng(illegalRadioModel.lat, illegalRadioModel.lon), R.mipmap.illegal_max, false, illegalRadioModel);
         }
     }
 
     private void addListener() {
         btn_compass.setOnClickListener(btnOnClickListener);
         btn_delete.setOnClickListener(btnOnClickListener);
+        box_Radio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    SQLiteDALRadio radio = new SQLiteDALRadio(getActivity());
+                    List<RadioModels> _RadioModelses = radio.queryAll("");
+                    for (RadioModels models : _RadioModelses) {
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        LatLng _latlng = new LatLng(models.lat, models.lon);
+                        markerOptions.position(_latlng);
+                        BitmapDescriptor bitmap = BitmapDescriptorFactory
+                                .fromResource(R.mipmap.station_max);
+                        markerOptions.icon(bitmap);
+                        Marker _Marker = aMap.addMarker(markerOptions);
+                        _Marker.setObject(models);
+                        radioMarker.add(_Marker);
+                    }
+                } else {
+                    for (Marker marker : radioMarker) {
+                        marker.remove();
+                    }
+                    radioMarker.clear();
+                }
+                if(preferences != null) {
+                    preferences.edit().putBoolean(RADIOCHECKKEY, isChecked).commit();
+                }
+            }
+        });
+
+
     }
 
     @Override
@@ -169,9 +215,11 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        IllegalRadioModel _Model = (IllegalRadioModel) marker.getObject();
-        if (_Model != null) {
-            new IllegalInfoDialog(getActivity(), _Model, this).show();
+        Object _obj = marker.getObject();
+        if (_obj instanceof IllegalRadioModel) {
+            new IllegalInfoDialog(getActivity(), (IllegalRadioModel) _obj, this).show();
+        } else if (_obj instanceof RadioModels) {
+            new RadioInfoDialog(getActivity(), (RadioModels) _obj).show();
         }
         return true;
     }
@@ -243,7 +291,7 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
     public void onEventMainThread(DrawMarkerEvent event) {
         IllegalRadioModel _mode = event.getRadioModel();
         if (Illegal_Marker_map.get(_mode) == null)
-            drawMark(new LatLng(_mode.lat, _mode.lon), R.mipmap.ic_maker, false, _mode);
+            drawMark(new LatLng(_mode.lat, _mode.lon), R.mipmap.illegal_max, false, _mode);
         mapIllegalRadioModelSet.add(_mode);
     }
 
@@ -251,9 +299,31 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
     public void onMapLongClick(LatLng latLng) {
         IllegalRadioModel _Model = new IllegalRadioModel();
         _Model.lat = (latLng.latitude);
-        _Model.lon = ( latLng.longitude);
+        _Model.lon = (latLng.longitude);
         _Model.appeartime = DateTools.getCurrentDateString("yyyy-MM-dd HH:mm:ss");
         new IllegalInfoDialog(getActivity(), _Model, this).show();
+
+
+//        RadioModels radioModels = new RadioModels();
+//
+//
+//        radioModels.name = "成都交通广播";
+//        radioModels.freq = "9140000";
+//        radioModels.span = "125000";
+//        LatLng _laLng = Utils.getLatLng(latLng);
+//        radioModels.lat = _laLng.latitude;
+//        radioModels.lon = _laLng.longitude;
+//        radioModels.beginTime = DateTools.getCurrentTime();
+//        radioModels.engTime = DateTools.getCurrentTime();
+//        radioModels.power  = 50;
+//        radioModels.address = "成都";
+//        radioModels.tag = "ssss";
+//
+//
+//        SQLiteDALRadio radio = new SQLiteDALRadio(getActivity());
+//
+//        radio.install(radioModels);
+
 
     }
 
@@ -282,29 +352,29 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
 
     @Override
     public void DialogBack(IllegalRadioModel radioModel, int p_ResId, Boolean isInit) {
-        if(radioModel.uid == -1 ){
+        if (radioModel.uid == -1) {
             updateIllegal(radioModel, Attribute.OPERATION_TYPE.INSTER);
-        }else if(radioModel.handle > 0){
+        } else if (radioModel.handle > 0) {
             updateIllegal(radioModel, Attribute.OPERATION_TYPE.DELETE);
-        }else if(radioModel.handle <= 0){
+        } else if (radioModel.handle <= 0) {
             updateIllegal(radioModel, Attribute.OPERATION_TYPE.UPDATE);
         }
     }
 
-    private void updateIllegal(IllegalRadioModel pModel,Attribute.OPERATION_TYPE pType){
+    private void updateIllegal(IllegalRadioModel pModel, Attribute.OPERATION_TYPE pType) {
         IllegalRadioModel _Model = null;
-        if(listener != null){
-            _Model = listener.updateIllegal(pModel,pType);
+        if (listener != null) {
+            _Model = listener.updateIllegal(pModel, pType);
         }
-        if(_Model == null){
+        if (_Model == null) {
             return;
         }
-        switch (pType){
+        switch (pType) {
             case DELETE:
-                updateIllegal(_Model,false);
+                updateIllegal(_Model, false);
                 break;
             case INSTER:
-                updateIllegal(_Model,true);
+                updateIllegal(_Model, true);
                 break;
             default:
                 break;
@@ -315,6 +385,9 @@ public class MapFragment extends FragmentBase implements AMap.OnMarkerClickListe
 
     @Override
     protected void stopSelfTask() {
+        if (listener != null) {
+            listener.stopTask(Attribute.TASKTYPE.NO);
+        }
     }
 
     @Override

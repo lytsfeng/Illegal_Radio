@@ -27,11 +27,11 @@
         >
         <TextView
             style="@style/StyleTableTitle"
-            android:text="@string/illegal_info_freq"
+            android:text="@string/info_freq"
             android:layout_width="50dp"
             android:layout_height="wrap_content"/>
         <TextView
-            android:id="@+id/id_illegal_info_freq"
+            android:id="@+id/id_radio_info_freq"
             style="@style/StyleTableValue"
             android:clickable="true"
             android:text="91.4MHz"
@@ -53,7 +53,7 @@
             style="@style/StyleTableTitle"
             android:text="@string/illegal_info_status"/>
         <TextView
-            android:id="@+id/id_illegal_info_status"
+            android:id="@+id/id_radio_info_name"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             style="@style/StyleTableValue"
@@ -95,9 +95,9 @@
             style="@style/StyleTableTitle"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="@string/illegal_info_lon"/>
+            android:text="@string/info_lon"/>
         <TextView
-            android:id="@+id/id_illegal_info_lon"
+            android:id="@+id/id_radio_info_lon"
             style="@style/StyleTableValue"
             android:text="91.4MHz"
             android:layout_width="250dp"
@@ -116,9 +116,9 @@
             style="@style/StyleTableTitle"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="@string/illegal_info_lat"/>
+            android:text="@string/info_lat"/>
         <TextView
-            android:id="@+id/id_illegal_info_lat"
+            android:id="@+id/id_radio_info_lat"
             style="@style/StyleTableValue"
             android:text="91.4MHz"
             android:layout_width="250dp"
@@ -138,9 +138,9 @@
             style="@style/StyleTableTitle"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="@string/illegal_info_address"/>
+            android:text="@string/info_address"/>
         <EditText
-            android:id="@+id/id_illegal_info_address"
+            android:id="@+id/id_radio_info_address"
             style="@style/StyleTableValue"
             android:clickable="true"
             android:text="91.4MHz"
@@ -160,9 +160,9 @@
             style="@style/StyleTableTitle"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="@string/illegal_info_tag"/>
+            android:text="@string/info_tag"/>
         <EditText
-            android:id="@+id/id_illegal_info_tag"
+            android:id="@+id/id_radio_info_tag"
             style="@style/StyleTableValue"
             android:clickable="true"
             android:text="91.4MHz"

@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import com.ldkj.illegal_radio.models.RadioModels;
 import com.ldkj.illegal_radio.utils.databases.base.SQLiteDALBase;
 
+import java.text.MessageFormat;
+
 /**
  * Created by john on 15-5-28.
  */
@@ -15,8 +17,20 @@ public class SQLiteDALRadio extends SQLiteDALBase<RadioModels> {
         super(p_Context);
     }
     @Override
-    public RadioModels install(RadioModels radioModels) {
-        return null;
+    public RadioModels install(RadioModels radioModel) {
+        String _sql = MessageFormat.format("insert into radio " +
+                        "([name],[freq],[span],[lon],[lat],[address],[beginTime],[endTime],[power],[tag]) " +
+                        "values (''{0}'',''{1}'',''{2}'',''{3}'',''{4}'',''{5}'',''{6}'',''{7}'',{8},''{9}'');",
+                radioModel.name, radioModel.freq,
+                radioModel.span, radioModel.lon * 10000, radioModel.lat * 10000,
+                radioModel.address, radioModel.beginTime,radioModel.engTime,radioModel.power,radioModel.tag);
+        try{
+            GetDataBase().execSQL(_sql);
+        }catch (Exception r){
+            r.printStackTrace();
+        }
+        radioModel.id =getMaxId();
+        return radioModel;
     }
 
     @Override
@@ -24,10 +38,14 @@ public class SQLiteDALRadio extends SQLiteDALBase<RadioModels> {
         RadioModels _Models = new RadioModels();
         _Models.id = pCursor.getInt(pCursor.getColumnIndex("id"));
         _Models.name = pCursor.getString(pCursor.getColumnIndex("name"));
-        _Models.freq = pCursor.getLong(pCursor.getColumnIndex("freq"));
-        _Models.span = pCursor.getInt(pCursor.getColumnIndex("span"));
-        _Models.lon = (pCursor.getDouble(pCursor.getColumnIndex("lon")));
-        _Models.lat = (pCursor.getDouble(pCursor.getColumnIndex("lat")));
+        _Models.freq = pCursor.getString(pCursor.getColumnIndex("freq"));
+        _Models.span = pCursor.getString(pCursor.getColumnIndex("span"));
+        String _lat = pCursor.getString(pCursor.getColumnIndex("lat"));
+        _lat = _lat.replaceAll(",","");
+        _Models.lat = Double.parseDouble(_lat)/10000.0;
+        String _lon = pCursor.getString(pCursor.getColumnIndex("lon"));
+        _lon = _lon.replaceAll(",","");
+        _Models.lon = Double.parseDouble(_lon)/10000.0;
         _Models.address = pCursor.getString(pCursor.getColumnIndex("address"));
         _Models.power = pCursor.getInt(pCursor.getColumnIndex("power"));
         _Models.tag = pCursor.getString(pCursor.getColumnIndex("tag"));
@@ -52,10 +70,10 @@ public class SQLiteDALRadio extends SQLiteDALBase<RadioModels> {
         String _SqlText = "create table radio(" +
                 "[id] integer primary key autoincrement not null," +
                 "[name] text not null," +
-                "[freq] long not null," +
-                "[span] long not null," +
-                "[lon] double not null," +
-                "[lat] double not null," +
+                "[freq] text not null," +
+                "[span] text not null," +
+                "[lon] text not null," +
+                "[lat] text not null," +
                 "[address] text not null," +
                 "[power] integer not null," +
                 "[begintime] datetime not null," +
