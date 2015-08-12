@@ -85,6 +85,12 @@ public class MainActivity extends ActivityFrame implements OnFragmentInteraction
         }
     };
     private LatLng oldLatlng = null;
+
+    @Override
+    protected FragmentBase getFragment(int position) {
+        return super.getFragment(position);
+    }
+
     private Queue<Double> levels = new ArrayDeque<Double>();
     private int avgCount = 1;
     private double levelSum = 0;
